@@ -1,6 +1,12 @@
 package com.voyageconnect.controller;
 
 import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import com.google.gson.TypeAdapter;
+import com.google.gson.ExclusionStrategy;
+import com.google.gson.FieldAttributes;
+import com.google.gson.stream.JsonReader;
+import com.google.gson.stream.JsonWriter;
 import com.voyageconnect.model.*;
 import com.voyageconnect.service.SearchService;
 
@@ -11,6 +17,7 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.math.BigDecimal;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
@@ -22,7 +29,69 @@ import java.util.List;
 public class SearchServlet extends HttpServlet {
 
     private final SearchService searchService = new SearchService();
-    private final Gson gson = new Gson();
+    private final Gson gson = new GsonBuilder()
+            .registerTypeAdapter(LocalDateTime.class, new LocalDateTimeAdapter())
+            .registerTypeAdapter(LocalDate.class, new LocalDateAdapter())
+            .setExclusionStrategies(new HibernateExclusionStrategy())
+            .create();
+    
+    // Adaptateur pour LocalDateTime
+    private static class LocalDateTimeAdapter extends TypeAdapter<LocalDateTime> {
+        private final DateTimeFormatter formatter = DateTimeFormatter.ISO_LOCAL_DATE_TIME;
+        
+        @Override
+        public void write(JsonWriter out, LocalDateTime value) throws IOException {
+            if (value == null) {
+                out.nullValue();
+            } else {
+                out.value(value.format(formatter));
+            }
+        }
+        
+        @Override
+        public LocalDateTime read(JsonReader in) throws IOException {
+            return LocalDateTime.parse(in.nextString(), formatter);
+        }
+    }
+    
+    // Adaptateur pour LocalDate
+    private static class LocalDateAdapter extends TypeAdapter<LocalDate> {
+        private final DateTimeFormatter formatter = DateTimeFormatter.ISO_LOCAL_DATE;
+        
+        @Override
+        public void write(JsonWriter out, LocalDate value) throws IOException {
+            if (value == null) {
+                out.nullValue();
+            } else {
+                out.value(value.format(formatter));
+            }
+        }
+        
+        @Override
+        public LocalDate read(JsonReader in) throws IOException {
+            return LocalDate.parse(in.nextString(), formatter);
+        }
+    }
+    
+    // Stratégie d'exclusion pour éviter la sérialisation des collections Hibernate lazy
+    private static class HibernateExclusionStrategy implements ExclusionStrategy {
+        @Override
+        public boolean shouldSkipField(FieldAttributes f) {
+            // Ignorer les collections Hibernate non initialisées
+            return f.getName().equals("flights") 
+                || f.getName().equals("hotels") 
+                || f.getName().equals("circuits")
+                || f.getName().equals("bookings")
+                || f.getName().equals("reviews")
+                || f.getName().equals("reservations")
+                || f.getName().equals("user");
+        }
+        
+        @Override
+        public boolean shouldSkipClass(Class<?> clazz) {
+            return false;
+        }
+    }
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)

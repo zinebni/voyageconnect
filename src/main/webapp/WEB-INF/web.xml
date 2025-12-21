@@ -54,13 +54,23 @@
         <url-pattern>/auth/*</url-pattern>
     </servlet-mapping>
 
-    <!-- Servlet de recherche -->
+    <!-- Servlet API de recherche (JSON) -->
     <servlet>
         <servlet-name>SearchServlet</servlet-name>
         <servlet-class>com.voyageconnect.controller.SearchServlet</servlet-class>
     </servlet>
     <servlet-mapping>
         <servlet-name>SearchServlet</servlet-name>
+        <url-pattern>/api/search/*</url-pattern>
+    </servlet-mapping>
+
+    <!-- Servlet de recherche (vues HTML/JSP) -->
+    <servlet>
+        <servlet-name>SearchViewController</servlet-name>
+        <servlet-class>com.voyageconnect.controller.SearchViewController</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>SearchViewController</servlet-name>
         <url-pattern>/search/*</url-pattern>
     </servlet-mapping>
 
