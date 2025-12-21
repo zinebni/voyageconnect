@@ -16,6 +16,13 @@ public class DestinationDAO extends GenericDAO<Destination> {
     }
 
     /**
+     * Compte le nombre total de destinations
+     */
+    public long countAll(EntityManager em) {
+        return count(em);
+    }
+
+    /**
      * Récupère toutes les destinations actives
      * @param em EntityManager
      * @return Liste des destinations actives

@@ -64,7 +64,6 @@ public class PaymentServlet extends HttpServlet {
         // Pour la simulation, on considère que le paiement réussit
         
         String reservationId = request.getParameter("reservationId");
-        String paymentMethod = request.getParameter("paymentMethod");
         String amount = request.getParameter("amount");
         
         // Simulation : 95% de succès

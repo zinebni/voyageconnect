@@ -80,7 +80,6 @@ public class ReviewServlet extends HttpServlet {
             throws ServletException, IOException {
         
         try {
-            Long userId = getUserIdFromSession(request);
             String typeStr = request.getParameter("type");
             Integer rating = Integer.parseInt(request.getParameter("rating"));
             String comment = request.getParameter("comment");

@@ -17,6 +17,13 @@ public class HotelDAO extends GenericDAO<Hotel> {
     }
 
     /**
+     * Compte le nombre total d'hôtels
+     */
+    public long countAll(EntityManager em) {
+        return count(em);
+    }
+
+    /**
      * Recherche des hôtels disponibles
      * @param em EntityManager
      * @param destinationId ID de la destination

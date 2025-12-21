@@ -12,7 +12,6 @@ import javax.persistence.EntityTransaction;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.List;
-import java.util.Optional;
 
 /**
  * Service pour la gestion des réservations

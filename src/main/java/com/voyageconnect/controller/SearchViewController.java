@@ -221,12 +221,4 @@ public class SearchViewController extends HttpServlet {
         }
         return null;
     }
-
-    private Boolean getParameterAsBoolean(HttpServletRequest request, String paramName) {
-        String value = request.getParameter(paramName);
-        if (value != null && !value.isEmpty()) {
-            return Boolean.parseBoolean(value);
-        }
-        return null;
-    }
 }

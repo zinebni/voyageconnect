@@ -18,6 +18,13 @@ public class CircuitDAO extends GenericDAO<Circuit> {
     }
 
     /**
+     * Compte le nombre total de circuits
+     */
+    public long countAll(EntityManager em) {
+        return count(em);
+    }
+
+    /**
      * Recherche des circuits disponibles
      * @param em EntityManager
      * @param destinationId ID de la destination

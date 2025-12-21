@@ -2,7 +2,6 @@ package com.voyageconnect.dao;
 
 import com.voyageconnect.model.Reservation;
 import com.voyageconnect.model.ReservationStatus;
-import com.voyageconnect.model.User;
 
 import javax.persistence.EntityManager;
 import javax.persistence.TypedQuery;

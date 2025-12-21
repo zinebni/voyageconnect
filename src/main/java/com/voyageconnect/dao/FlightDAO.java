@@ -19,6 +19,13 @@ public class FlightDAO extends GenericDAO<Flight> {
     }
 
     /**
+     * Compte le nombre total de vols
+     */
+    public long countAll(EntityManager em) {
+        return count(em);
+    }
+
+    /**
      * Recherche des vols disponibles
      * @param em EntityManager
      * @param destinationId ID de la destination

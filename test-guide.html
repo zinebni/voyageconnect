@@ -1,0 +1,424 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Guide de Test - Réservations VoyageConnect</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            padding: 20px;
+            color: #333;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 20px;
+            padding: 40px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+        }
+        
+        h1 {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            font-size: 2.5em;
+            margin-bottom: 10px;
+        }
+        
+        .subtitle {
+            color: #666;
+            margin-bottom: 30px;
+            font-size: 1.2em;
+        }
+        
+        .step {
+            background: #f9f9f9;
+            border-left: 4px solid #667eea;
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 8px;
+        }
+        
+        .step h2 {
+            color: #667eea;
+            margin-bottom: 15px;
+        }
+        
+        .option {
+            background: white;
+            border: 2px solid #e0e0e0;
+            border-radius: 12px;
+            padding: 20px;
+            margin: 15px 0;
+            transition: all 0.3s ease;
+        }
+        
+        .option:hover {
+            border-color: #667eea;
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.2);
+        }
+        
+        .option h3 {
+            color: #333;
+            margin-bottom: 10px;
+        }
+        
+        .btn {
+            display: inline-block;
+            padding: 12px 30px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            text-decoration: none;
+            border-radius: 8px;
+            font-weight: 600;
+            margin: 5px;
+            transition: all 0.3s ease;
+        }
+        
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px rgba(102, 126, 234, 0.3);
+        }
+        
+        .btn-secondary {
+            background: linear-gradient(135deg, #11998e 0%, #38ef7d 100%);
+        }
+        
+        .code-block {
+            background: #2d2d2d;
+            color: #f8f8f2;
+            padding: 20px;
+            border-radius: 8px;
+            overflow-x: auto;
+            margin: 15px 0;
+            font-family: 'Courier New', monospace;
+        }
+        
+        .warning {
+            background: #fff3cd;
+            border-left: 4px solid #ffc107;
+            padding: 15px;
+            border-radius: 8px;
+            margin: 15px 0;
+        }
+        
+        .success {
+            background: #d4edda;
+            border-left: 4px solid #28a745;
+            padding: 15px;
+            border-radius: 8px;
+            margin: 15px 0;
+        }
+        
+        .error {
+            background: #f8d7da;
+            border-left: 4px solid #dc3545;
+            padding: 15px;
+            border-radius: 8px;
+            margin: 15px 0;
+        }
+        
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 15px 0;
+        }
+        
+        table th {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 12px;
+            text-align: left;
+        }
+        
+        table td {
+            padding: 12px;
+            border-bottom: 1px solid #e0e0e0;
+        }
+        
+        table tr:hover {
+            background: #f9f9f9;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🎫 Guide de Test - Réservations VoyageConnect</h1>
+        <p class="subtitle">Java EE • Tomcat 9 • MySQL 8 • Sans Spring</p>
+        
+        <div class="warning">
+            <strong>⚠️ PROBLÈME IDENTIFIÉ :</strong> Le filtre d'authentification bloque l'accès aux routes /reservation/*<br>
+            <strong>Solution :</strong> Se connecter AVANT de tester les réservations
+        </div>
+        
+        <!-- ÉTAPE 1 -->
+        <div class="step">
+            <h2>Étape 1️⃣ : Créer une session utilisateur</h2>
+            
+            <div class="option">
+                <h3>Option A : Créer une session de test (RAPIDE - DEV uniquement)</h3>
+                <p>Crée automatiquement une session utilisateur fictive pour les tests</p>
+                <a href="http://localhost:8080/VoyageConnect/test-session.jsp" class="btn" target="_blank">
+                    🚀 Créer session de test
+                </a>
+                <div class="warning" style="margin-top: 15px;">
+                    ⚠️ À supprimer en production (fichier test-session.jsp)
+                </div>
+            </div>
+            
+            <div class="option">
+                <h3>Option B : Se connecter avec un compte réel</h3>
+                <p>Utiliser la page de login standard avec un compte existant ou nouveau</p>
+                
+                <p><strong>Comptes de test :</strong></p>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Email</th>
+                            <th>Password</th>
+                            <th>Rôle</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>test@voyage.com</td>
+                            <td>test123</td>
+                            <td>USER</td>
+                        </tr>
+                        <tr>
+                            <td>admin@voyage.com</td>
+                            <td>admin123</td>
+                            <td>ADMIN</td>
+                        </tr>
+                    </tbody>
+                </table>
+                
+                <a href="http://localhost:8080/VoyageConnect/auth/login" class="btn btn-secondary" target="_blank">
+                    🔐 Page de connexion
+                </a>
+                
+                <div class="warning" style="margin-top: 15px;">
+                    💡 Si les comptes n'existent pas, exécuter le script SQL : <code>sql/create_test_user.sql</code>
+                </div>
+            </div>
+        </div>
+        
+        <!-- ÉTAPE 2 -->
+        <div class="step">
+            <h2>Étape 2️⃣ : Tester les formulaires de réservation</h2>
+            
+            <div class="option">
+                <h3>✈️ Réservation de Vol</h3>
+                <p>Formulaire pour réserver un vol avec nombre de passagers et paiement</p>
+                <a href="http://localhost:8080/VoyageConnect/reservation/new?type=flight&id=1" class="btn" target="_blank">
+                    Réserver Vol #1
+                </a>
+                <a href="http://localhost:8080/VoyageConnect/reservation/new?type=flight&id=2" class="btn" target="_blank">
+                    Réserver Vol #2
+                </a>
+            </div>
+            
+            <div class="option">
+                <h3>🏨 Réservation d'Hôtel</h3>
+                <p>Formulaire pour réserver un hôtel avec dates check-in/check-out et nombre de chambres</p>
+                <a href="http://localhost:8080/VoyageConnect/reservation/new?type=hotel&id=1" class="btn" target="_blank">
+                    Réserver Hôtel #1
+                </a>
+                <a href="http://localhost:8080/VoyageConnect/reservation/new?type=hotel&id=2" class="btn" target="_blank">
+                    Réserver Hôtel #2
+                </a>
+            </div>
+            
+            <div class="option">
+                <h3>🗺️ Réservation de Circuit</h3>
+                <p>Formulaire pour réserver un circuit avec nombre de participants</p>
+                <a href="http://localhost:8080/VoyageConnect/reservation/new?type=circuit&id=1" class="btn" target="_blank">
+                    Réserver Circuit #1
+                </a>
+                <a href="http://localhost:8080/VoyageConnect/reservation/new?type=circuit&id=2" class="btn" target="_blank">
+                    Réserver Circuit #2
+                </a>
+            </div>
+        </div>
+        
+        <!-- ÉTAPE 3 -->
+        <div class="step">
+            <h2>Étape 3️⃣ : Vérifier les résultats</h2>
+            
+            <div class="option">
+                <h3>📋 Liste des réservations</h3>
+                <p>Voir toutes les réservations créées</p>
+                <a href="http://localhost:8080/VoyageConnect/reservation/list" class="btn btn-secondary" target="_blank">
+                    📊 Mes réservations
+                </a>
+            </div>
+            
+            <div class="option">
+                <h3>🔍 Vérification en base de données</h3>
+                <p>Requête SQL pour vérifier la création des réservations</p>
+                <div class="code-block">
+USE voyageconnect;
+
+-- Dernières réservations
+SELECT 
+    r.id,
+    r.reservation_number,
+    r.reservation_type,
+    r.total_amount,
+    r.status,
+    u.email,
+    f.flight_number
+FROM reservations r
+JOIN users u ON r.user_id = u.id
+LEFT JOIN flights f ON r.flight_id = f.id
+ORDER BY r.created_at DESC
+LIMIT 10;
+
+-- Paiements associés
+SELECT 
+    p.id,
+    p.amount,
+    p.payment_method,
+    p.status,
+    r.reservation_number
+FROM payments p
+JOIN reservations r ON p.reservation_id = r.id
+ORDER BY p.created_at DESC
+LIMIT 10;
+                </div>
+            </div>
+        </div>
+        
+        <!-- ARCHITECTURE -->
+        <div class="step">
+            <h2>🏗️ Architecture implémentée</h2>
+            
+            <table>
+                <thead>
+                    <tr>
+                        <th>URL</th>
+                        <th>Méthode</th>
+                        <th>Servlet</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>/reservation/new</td>
+                        <td>GET</td>
+                        <td>ReservationNewServlet</td>
+                        <td>Affiche le formulaire de réservation</td>
+                    </tr>
+                    <tr>
+                        <td>/reservation/confirm</td>
+                        <td>POST</td>
+                        <td>ReservationConfirmServlet</td>
+                        <td>Crée la réservation en base</td>
+                    </tr>
+                    <tr>
+                        <td>/reservation/list</td>
+                        <td>GET</td>
+                        <td>ReservationServlet</td>
+                        <td>Liste les réservations</td>
+                    </tr>
+                    <tr>
+                        <td>/reservation/view</td>
+                        <td>GET</td>
+                        <td>ReservationServlet</td>
+                        <td>Détails d'une réservation</td>
+                    </tr>
+                    <tr>
+                        <td>/reservation/cancel</td>
+                        <td>GET/POST</td>
+                        <td>ReservationServlet</td>
+                        <td>Annuler une réservation</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        
+        <!-- TROUBLESHOOTING -->
+        <div class="step">
+            <h2>🔧 Dépannage</h2>
+            
+            <div class="error">
+                <strong>Erreur 404 :</strong>
+                <ul style="margin-left: 20px; margin-top: 10px;">
+                    <li>Vérifier que Tomcat est démarré</li>
+                    <li>Vérifier que VoyageConnect.war est déployé</li>
+                    <li>Consulter les logs : <code>C:\tomcat2\apache-tomcat-9.0.113\logs\catalina.out</code></li>
+                </ul>
+            </div>
+            
+            <div class="warning">
+                <strong>Redirection vers /auth/login :</strong>
+                <ul style="margin-left: 20px; margin-top: 10px;">
+                    <li>Normal si vous n'êtes pas connecté</li>
+                    <li>Utiliser Option A (test-session.jsp) ou Option B (login)</li>
+                </ul>
+            </div>
+            
+            <div class="error">
+                <strong>Vol/Hôtel/Circuit introuvable :</strong>
+                <ul style="margin-left: 20px; margin-top: 10px;">
+                    <li>Vérifier que des données existent en base</li>
+                    <li>Modifier les IDs dans les URLs (?id=1, ?id=2, etc.)</li>
+                    <li>Exécuter les scripts SQL d'insertion de données de test</li>
+                </ul>
+            </div>
+        </div>
+        
+        <!-- FICHIERS CRÉÉS -->
+        <div class="step">
+            <h2>📁 Fichiers créés</h2>
+            
+            <div class="success">
+                <strong>✅ Servlets :</strong>
+                <ul style="margin-left: 20px; margin-top: 10px;">
+                    <li>src/main/java/com/voyageconnect/controller/ReservationNewServlet.java</li>
+                    <li>src/main/java/com/voyageconnect/controller/ReservationConfirmServlet.java</li>
+                </ul>
+            </div>
+            
+            <div class="success">
+                <strong>✅ JSP :</strong>
+                <ul style="margin-left: 20px; margin-top: 10px;">
+                    <li>src/main/webapp/WEB-INF/views/reservation/form.jsp</li>
+                </ul>
+            </div>
+            
+            <div class="success">
+                <strong>✅ Configuration :</strong>
+                <ul style="margin-left: 20px; margin-top: 10px;">
+                    <li>src/main/webapp/WEB-INF/web.xml (modifié)</li>
+                </ul>
+            </div>
+            
+            <div class="success">
+                <strong>✅ Documentation :</strong>
+                <ul style="margin-left: 20px; margin-top: 10px;">
+                    <li>DEBUG_RESERVATION.md</li>
+                    <li>sql/create_test_user.sql</li>
+                    <li>test-guide.html (ce fichier)</li>
+                </ul>
+            </div>
+        </div>
+        
+        <div class="success" style="margin-top: 30px; text-align: center;">
+            <h2>🎉 Le flux de réservation est prêt !</h2>
+            <p style="margin-top: 10px;">Commencez par l'Étape 1 ci-dessus pour tester</p>
+        </div>
+    </div>
+</body>
+</html>

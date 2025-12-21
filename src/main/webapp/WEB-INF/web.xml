@@ -74,14 +74,36 @@
         <url-pattern>/search/*</url-pattern>
     </servlet-mapping>
 
-    <!-- Servlet de réservation -->
+    <!-- Servlet de réservation - Formulaire nouvelle réservation -->
+    <servlet>
+        <servlet-name>ReservationNewServlet</servlet-name>
+        <servlet-class>com.voyageconnect.controller.ReservationNewServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>ReservationNewServlet</servlet-name>
+        <url-pattern>/reservation/new</url-pattern>
+    </servlet-mapping>
+
+    <!-- Servlet de réservation - Confirmation et création -->
+    <servlet>
+        <servlet-name>ReservationConfirmServlet</servlet-name>
+        <servlet-class>com.voyageconnect.controller.ReservationConfirmServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>ReservationConfirmServlet</servlet-name>
+        <url-pattern>/reservation/confirm</url-pattern>
+    </servlet-mapping>
+
+    <!-- Servlet de réservation - Liste et gestion -->
     <servlet>
         <servlet-name>ReservationServlet</servlet-name>
         <servlet-class>com.voyageconnect.controller.ReservationServlet</servlet-class>
     </servlet>
     <servlet-mapping>
         <servlet-name>ReservationServlet</servlet-name>
-        <url-pattern>/reservation/*</url-pattern>
+        <url-pattern>/reservation/list</url-pattern>
+        <url-pattern>/reservation/view</url-pattern>
+        <url-pattern>/reservation/cancel</url-pattern>
     </servlet-mapping>
 
     <!-- Servlet utilisateur -->
@@ -91,7 +113,18 @@
     </servlet>
     <servlet-mapping>
         <servlet-name>UserServlet</servlet-name>
-        <url-pattern>/user/*</url-pattern>
+        <url-pattern>/user/profile</url-pattern>
+        <url-pattern>/user/update</url-pattern>
+    </servlet-mapping>
+
+    <!-- Servlet Dashboard Utilisateur -->
+    <servlet>
+        <servlet-name>UserDashboardServlet</servlet-name>
+        <servlet-class>com.voyageconnect.controller.UserDashboardServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>UserDashboardServlet</servlet-name>
+        <url-pattern>/user/dashboard</url-pattern>
     </servlet-mapping>
 
     <!-- Servlet administration -->
@@ -101,7 +134,20 @@
     </servlet>
     <servlet-mapping>
         <servlet-name>AdminServlet</servlet-name>
-        <url-pattern>/admin/*</url-pattern>
+        <url-pattern>/admin/destinations</url-pattern>
+        <url-pattern>/admin/flights</url-pattern>
+        <url-pattern>/admin/hotels</url-pattern>
+        <url-pattern>/admin/circuits</url-pattern>
+    </servlet-mapping>
+
+    <!-- Servlet Dashboard Admin -->
+    <servlet>
+        <servlet-name>AdminDashboardServlet</servlet-name>
+        <servlet-class>com.voyageconnect.controller.AdminDashboardServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>AdminDashboardServlet</servlet-name>
+        <url-pattern>/admin/dashboard</url-pattern>
     </servlet-mapping>
 
     <!-- Servlet paiement -->

@@ -1,7 +1,6 @@
 package com.voyageconnect.dao;
 
 import com.voyageconnect.model.Review;
-import com.voyageconnect.model.ReviewType;
 
 import javax.persistence.EntityManager;
 import javax.persistence.TypedQuery;

@@ -1,7 +1,5 @@
 package com.voyageconnect.filter;
 
-import com.voyageconnect.model.User;
-
 import javax.servlet.*;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
