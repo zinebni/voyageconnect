@@ -1,0 +1,135 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<web-app xmlns="http://xmlns.jcp.org/xml/ns/javaee"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/javaee
+         http://xmlns.jcp.org/xml/ns/javaee/web-app_4_0.xsd"
+         version="4.0">
+
+    <display-name>VoyageConnect</display-name>
+    <description>Plateforme d'agence de voyage - Java EE</description>
+
+    <!-- Page d'accueil par défaut -->
+    <welcome-file-list>
+        <welcome-file>index.jsp</welcome-file>
+    </welcome-file-list>
+
+    <!-- Filtre d'authentification -->
+    <filter>
+        <filter-name>AuthenticationFilter</filter-name>
+        <filter-class>com.voyageconnect.filter.AuthenticationFilter</filter-class>
+    </filter>
+    <filter-mapping>
+        <filter-name>AuthenticationFilter</filter-name>
+        <url-pattern>/user/*</url-pattern>
+        <url-pattern>/reservation/*</url-pattern>
+    </filter-mapping>
+
+    <!-- Filtre d'autorisation ADMIN -->
+    <filter>
+        <filter-name>AdminAuthorizationFilter</filter-name>
+        <filter-class>com.voyageconnect.filter.AdminAuthorizationFilter</filter-class>
+    </filter>
+    <filter-mapping>
+        <filter-name>AdminAuthorizationFilter</filter-name>
+        <url-pattern>/admin/*</url-pattern>
+    </filter-mapping>
+
+    <!-- Filtre d'encodage UTF-8 -->
+    <filter>
+        <filter-name>EncodingFilter</filter-name>
+        <filter-class>com.voyageconnect.filter.EncodingFilter</filter-class>
+    </filter>
+    <filter-mapping>
+        <filter-name>EncodingFilter</filter-name>
+        <url-pattern>/*</url-pattern>
+    </filter-mapping>
+
+    <!-- Servlet d'authentification -->
+    <servlet>
+        <servlet-name>AuthServlet</servlet-name>
+        <servlet-class>com.voyageconnect.controller.AuthServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>AuthServlet</servlet-name>
+        <url-pattern>/auth/*</url-pattern>
+    </servlet-mapping>
+
+    <!-- Servlet de recherche -->
+    <servlet>
+        <servlet-name>SearchServlet</servlet-name>
+        <servlet-class>com.voyageconnect.controller.SearchServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>SearchServlet</servlet-name>
+        <url-pattern>/search/*</url-pattern>
+    </servlet-mapping>
+
+    <!-- Servlet de réservation -->
+    <servlet>
+        <servlet-name>ReservationServlet</servlet-name>
+        <servlet-class>com.voyageconnect.controller.ReservationServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>ReservationServlet</servlet-name>
+        <url-pattern>/reservation/*</url-pattern>
+    </servlet-mapping>
+
+    <!-- Servlet utilisateur -->
+    <servlet>
+        <servlet-name>UserServlet</servlet-name>
+        <servlet-class>com.voyageconnect.controller.UserServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>UserServlet</servlet-name>
+        <url-pattern>/user/*</url-pattern>
+    </servlet-mapping>
+
+    <!-- Servlet administration -->
+    <servlet>
+        <servlet-name>AdminServlet</servlet-name>
+        <servlet-class>com.voyageconnect.controller.AdminServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>AdminServlet</servlet-name>
+        <url-pattern>/admin/*</url-pattern>
+    </servlet-mapping>
+
+    <!-- Servlet paiement -->
+    <servlet>
+        <servlet-name>PaymentServlet</servlet-name>
+        <servlet-class>com.voyageconnect.controller.PaymentServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>PaymentServlet</servlet-name>
+        <url-pattern>/payment/*</url-pattern>
+    </servlet-mapping>
+
+    <!-- Servlet avis -->
+    <servlet>
+        <servlet-name>ReviewServlet</servlet-name>
+        <servlet-class>com.voyageconnect.controller.ReviewServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>ReviewServlet</servlet-name>
+        <url-pattern>/review/*</url-pattern>
+    </servlet-mapping>
+
+    <!-- Configuration des erreurs -->
+    <error-page>
+        <error-code>404</error-code>
+        <location>/WEB-INF/views/error/404.jsp</location>
+    </error-page>
+    <error-page>
+        <error-code>500</error-code>
+        <location>/WEB-INF/views/error/500.jsp</location>
+    </error-page>
+    <error-page>
+        <error-code>403</error-code>
+        <location>/WEB-INF/views/error/403.jsp</location>
+    </error-page>
+
+    <!-- Durée de session (30 minutes) -->
+    <session-config>
+        <session-timeout>30</session-timeout>
+    </session-config>
+</web-app>
