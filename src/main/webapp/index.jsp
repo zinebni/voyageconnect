@@ -95,7 +95,7 @@
         <div class="row">
             <div class="col-md-3 mb-3">
                 <div class="card">
-                    <img src="https://via.placeholder.com/300x200" class="card-img-top" alt="Paris">
+                    <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='300' height='200'%3E%3Crect fill='%23667eea' width='300' height='200'/%3E%3Ctext fill='white' font-family='Arial' font-size='18' x='50%25' y='50%25' text-anchor='middle' dy='.3em'%3EParis%3C/text%3E%3C/svg%3E" class="card-img-top" alt="Paris">
                     <div class="card-body">
                         <h5 class="card-title">Paris, France</h5>
                         <p class="card-text">La ville lumière vous attend</p>
@@ -105,7 +105,7 @@
             </div>
             <div class="col-md-3 mb-3">
                 <div class="card">
-                    <img src="https://via.placeholder.com/300x200" class="card-img-top" alt="Tokyo">
+                    <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='300' height='200'%3E%3Crect fill='%23764ba2' width='300' height='200'/%3E%3Ctext fill='white' font-family='Arial' font-size='18' x='50%25' y='50%25' text-anchor='middle' dy='.3em'%3ETokyo%3C/text%3E%3C/svg%3E" class="card-img-top" alt="Tokyo">
                     <div class="card-body">
                         <h5 class="card-title">Tokyo, Japon</h5>
                         <p class="card-text">Tradition et modernité</p>
@@ -115,7 +115,7 @@
             </div>
             <div class="col-md-3 mb-3">
                 <div class="card">
-                    <img src="https://via.placeholder.com/300x200" class="card-img-top" alt="New York">
+                    <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='300' height='200'%3E%3Crect fill='%23667eea' width='300' height='200'/%3E%3Ctext fill='white' font-family='Arial' font-size='18' x='50%25' y='50%25' text-anchor='middle' dy='.3em'%3ENew York%3C/text%3E%3C/svg%3E" class="card-img-top" alt="New York">
                     <div class="card-body">
                         <h5 class="card-title">New York, USA</h5>
                         <p class="card-text">La ville qui ne dort jamais</p>
@@ -125,7 +125,7 @@
             </div>
             <div class="col-md-3 mb-3">
                 <div class="card">
-                    <img src="https://via.placeholder.com/300x200" class="card-img-top" alt="Dubai">
+                    <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='300' height='200'%3E%3Crect fill='%23764ba2' width='300' height='200'/%3E%3Ctext fill='white' font-family='Arial' font-size='18' x='50%25' y='50%25' text-anchor='middle' dy='.3em'%3EDubai%3C/text%3E%3C/svg%3E" class="card-img-top" alt="Dubai">
                     <div class="card-body">
                         <h5 class="card-title">Dubai, UAE</h5>
                         <p class="card-text">Luxe et démesure</p>

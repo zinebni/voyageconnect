@@ -13,6 +13,7 @@ import java.io.IOException;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
+import java.util.logging.Logger;
 
 /**
  * Servlet pour la gestion des réservations
@@ -20,13 +21,17 @@ import java.util.List;
  */
 public class ReservationServlet extends HttpServlet {
 
+    private static final Logger LOGGER = Logger.getLogger(ReservationServlet.class.getName());
     private final ReservationService reservationService = new ReservationService();
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         
+        LOGGER.info("ReservationServlet.doGet appelé - ServletPath: " + request.getServletPath() + ", PathInfo: " + request.getPathInfo());
+        
         String action = getAction(request);
+        LOGGER.info("Action extraite: " + action);
         
         switch (action) {
             case "list":
@@ -75,8 +80,13 @@ public class ReservationServlet extends HttpServlet {
     private void listReservations(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         
+        LOGGER.info("listReservations appelée");
+        
         Long userId = getUserIdFromSession(request);
+        LOGGER.info("User ID from session: " + userId);
+        
         List<Reservation> reservations = reservationService.getUserReservations(userId);
+        LOGGER.info("Nombre de réservations trouvées: " + (reservations != null ? reservations.size() : 0));
         
         request.setAttribute("reservations", reservations);
         request.getRequestDispatcher("/WEB-INF/views/reservation/list.jsp").forward(request, response);
@@ -245,10 +255,14 @@ public class ReservationServlet extends HttpServlet {
      * Extrait l'action de l'URL
      */
     private String getAction(HttpServletRequest request) {
-        String pathInfo = request.getPathInfo();
-        if (pathInfo == null || pathInfo.equals("/")) {
-            return "list";
+        String servletPath = request.getServletPath();
+        // /reservations/list -> list
+        // /reservations/view -> view
+        // /reservations/cancel -> cancel
+        if (servletPath.contains("/")) {
+            int lastSlash = servletPath.lastIndexOf("/");
+            return servletPath.substring(lastSlash + 1);
         }
-        return pathInfo.substring(1);
+        return "list";
     }
 }

@@ -3,9 +3,7 @@ package com.voyageconnect.controller;
 import com.voyageconnect.dao.CircuitDAO;
 import com.voyageconnect.dao.FlightDAO;
 import com.voyageconnect.dao.HotelDAO;
-import com.voyageconnect.model.Circuit;
-import com.voyageconnect.model.Flight;
-import com.voyageconnect.model.Hotel;
+import com.voyageconnect.model.*;
 import com.voyageconnect.util.JPAUtil;
 
 import javax.persistence.EntityManager;
@@ -15,6 +13,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.io.IOException;
+import java.time.LocalDateTime;
 import java.util.Optional;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -212,5 +211,188 @@ public class ReservationNewServlet extends HttpServlet {
         request.setAttribute("circuit", circuit);
         request.setAttribute("reservationType", "CIRCUIT");
         request.getRequestDispatcher("/WEB-INF/views/reservation/form.jsp").forward(request, response);
+    }
+
+    @Override
+    protected void doPost(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
+        
+        // Vérifier que l'utilisateur est connecté
+        HttpSession session = request.getSession(false);
+        if (session == null || session.getAttribute("userId") == null) {
+            response.sendRedirect(request.getContextPath() + "/auth/login");
+            return;
+        }
+
+        Long userId = (Long) session.getAttribute("userId");
+        String type = request.getParameter("type");
+        
+        LOGGER.info("Soumission de réservation - Type: " + type + ", User ID: " + userId);
+
+        EntityManager em = JPAUtil.getEntityManager();
+        try {
+            em.getTransaction().begin();
+
+            // Créer la réservation selon le type
+            if ("FLIGHT".equalsIgnoreCase(type)) {
+                createFlightReservation(request, userId, em);
+            } else if ("HOTEL".equalsIgnoreCase(type)) {
+                createHotelReservation(request, userId, em);
+            } else if ("CIRCUIT".equalsIgnoreCase(type)) {
+                createCircuitReservation(request, userId, em);
+            } else {
+                throw new IllegalArgumentException("Type de réservation invalide: " + type);
+            }
+
+            em.getTransaction().commit();
+            LOGGER.info("Réservation créée avec succès pour l'utilisateur " + userId);
+            
+            // Rediriger vers la page de succès
+            response.sendRedirect(request.getContextPath() + "/reservation/success");
+
+        } catch (Exception e) {
+            if (em.getTransaction().isActive()) {
+                em.getTransaction().rollback();
+            }
+            LOGGER.log(Level.SEVERE, "Erreur lors de la création de la réservation", e);
+            request.setAttribute("error", "Erreur lors de la création de la réservation: " + e.getMessage());
+            request.getRequestDispatcher("/WEB-INF/views/reservation/error.jsp").forward(request, response);
+        } finally {
+            em.close();
+        }
+    }
+
+    private void createFlightReservation(HttpServletRequest request, Long userId, EntityManager em) {
+        Long flightId = Long.parseLong(request.getParameter("flightId"));
+        int numberOfPassengers = Integer.parseInt(request.getParameter("numberOfPassengers"));
+        
+        LOGGER.info("Création de réservation vol - Flight ID: " + flightId + ", Passagers: " + numberOfPassengers);
+        
+        // Récupérer le vol et l'utilisateur
+        Flight flight = em.find(Flight.class, flightId);
+        User user = em.find(User.class, userId);
+        
+        if (flight == null) {
+            throw new IllegalArgumentException("Vol non trouvé: " + flightId);
+        }
+        if (user == null) {
+            throw new IllegalArgumentException("Utilisateur non trouvé: " + userId);
+        }
+        
+        // Vérifier les places disponibles
+        if (flight.getAvailableSeats() < numberOfPassengers) {
+            throw new IllegalArgumentException("Pas assez de places disponibles");
+        }
+        
+        // Créer la réservation
+        Reservation reservation = new Reservation();
+        reservation.setUser(user);
+        reservation.setType(ReservationType.FLIGHT);
+        reservation.setFlight(flight);
+        reservation.setNumberOfPeople(numberOfPassengers);
+        reservation.setTotalAmount(flight.getPrice().multiply(new java.math.BigDecimal(numberOfPassengers)));
+        reservation.setStatus(ReservationStatus.EN_ATTENTE);
+        
+        // Mettre à jour les places disponibles
+        flight.setAvailableSeats(flight.getAvailableSeats() - numberOfPassengers);
+        
+        // Persister
+        em.persist(reservation);
+        em.merge(flight);
+        
+        LOGGER.info("Réservation vol créée: " + reservation.getReservationNumber());
+    }
+
+    private void createHotelReservation(HttpServletRequest request, Long userId, EntityManager em) {
+        Long hotelId = Long.parseLong(request.getParameter("hotelId"));
+        int numberOfRooms = Integer.parseInt(request.getParameter("numberOfRooms"));
+        String checkInStr = request.getParameter("checkInDate");
+        String checkOutStr = request.getParameter("checkOutDate");
+        
+        LOGGER.info("Création de réservation hôtel - Hotel ID: " + hotelId + ", Chambres: " + numberOfRooms);
+        
+        // Récupérer l'hôtel et l'utilisateur
+        Hotel hotel = em.find(Hotel.class, hotelId);
+        User user = em.find(User.class, userId);
+        
+        if (hotel == null) {
+            throw new IllegalArgumentException("Hôtel non trouvé: " + hotelId);
+        }
+        if (user == null) {
+            throw new IllegalArgumentException("Utilisateur non trouvé: " + userId);
+        }
+        
+        // Vérifier les chambres disponibles
+        if (hotel.getAvailableRooms() < numberOfRooms) {
+            throw new IllegalArgumentException("Pas assez de chambres disponibles");
+        }
+        
+        // Parser les dates
+        LocalDateTime checkIn = LocalDateTime.parse(checkInStr + "T14:00:00");
+        LocalDateTime checkOut = LocalDateTime.parse(checkOutStr + "T12:00:00");
+        
+        // Calculer le nombre de nuits
+        long nights = java.time.Duration.between(checkIn, checkOut).toDays();
+        
+        // Créer la réservation
+        Reservation reservation = new Reservation();
+        reservation.setUser(user);
+        reservation.setType(ReservationType.HOTEL);
+        reservation.setHotel(hotel);
+        reservation.setCheckInDate(checkIn);
+        reservation.setCheckOutDate(checkOut);
+        reservation.setNumberOfPeople(numberOfRooms);
+        reservation.setTotalAmount(hotel.getPricePerNight().multiply(new java.math.BigDecimal(numberOfRooms * nights)));
+        reservation.setStatus(ReservationStatus.EN_ATTENTE);
+        
+        // Mettre à jour les chambres disponibles
+        hotel.setAvailableRooms(hotel.getAvailableRooms() - numberOfRooms);
+        
+        // Persister
+        em.persist(reservation);
+        em.merge(hotel);
+        
+        LOGGER.info("Réservation hôtel créée: " + reservation.getReservationNumber());
+    }
+
+    private void createCircuitReservation(HttpServletRequest request, Long userId, EntityManager em) {
+        Long circuitId = Long.parseLong(request.getParameter("circuitId"));
+        int numberOfParticipants = Integer.parseInt(request.getParameter("numberOfParticipants"));
+        
+        LOGGER.info("Création de réservation circuit - Circuit ID: " + circuitId + ", Participants: " + numberOfParticipants);
+        
+        // Récupérer le circuit et l'utilisateur
+        Circuit circuit = em.find(Circuit.class, circuitId);
+        User user = em.find(User.class, userId);
+        
+        if (circuit == null) {
+            throw new IllegalArgumentException("Circuit non trouvé: " + circuitId);
+        }
+        if (user == null) {
+            throw new IllegalArgumentException("Utilisateur non trouvé: " + userId);
+        }
+        
+        // Vérifier les places disponibles
+        if (circuit.getAvailableSpots() < numberOfParticipants) {
+            throw new IllegalArgumentException("Pas assez de places disponibles");
+        }
+        
+        // Créer la réservation
+        Reservation reservation = new Reservation();
+        reservation.setUser(user);
+        reservation.setType(ReservationType.CIRCUIT);
+        reservation.setCircuit(circuit);
+        reservation.setNumberOfPeople(numberOfParticipants);
+        reservation.setTotalAmount(circuit.getPrice().multiply(new java.math.BigDecimal(numberOfParticipants)));
+        reservation.setStatus(ReservationStatus.EN_ATTENTE);
+        
+        // Mettre à jour les places disponibles
+        circuit.setAvailableSpots(circuit.getAvailableSpots() - numberOfParticipants);
+        
+        // Persister
+        em.persist(reservation);
+        em.merge(circuit);
+        
+        LOGGER.info("Réservation circuit créée: " + reservation.getReservationNumber());
     }
 }

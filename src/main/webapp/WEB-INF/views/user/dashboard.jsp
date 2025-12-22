@@ -9,378 +9,467 @@
     <title>Tableau de bord - VoyageConnect</title>
     <link rel="stylesheet" href="${pageContext.request.contextPath}/css/style.css">
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
         
         body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background: #f5f7fa;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             min-height: 100vh;
         }
         
-        .dashboard-container {
-            max-width: 1400px;
-            margin: 0 auto;
-            padding: 30px 20px;
+        .dashboard-wrapper {
+            min-height: 100vh;
+            background: #f8f9fc;
+            padding-top: 80px;
         }
         
-        .welcome-section {
+        .dashboard-header {
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            border-radius: 20px;
-            padding: 40px;
-            color: white;
-            margin-bottom: 40px;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 1000;
             box-shadow: 0 10px 40px rgba(102, 126, 234, 0.3);
         }
         
-        .welcome-section h1 {
-            font-size: 36px;
-            margin-bottom: 10px;
+        .header-content {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 25px 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
         }
         
-        .welcome-section p {
-            font-size: 18px;
-            opacity: 0.9;
+        .header-left { display: flex; align-items: center; gap: 20px; }
+        
+        .user-avatar {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 28px;
+            font-weight: 700;
+            color: white;
+            box-shadow: 0 8px 20px rgba(240, 147, 251, 0.4);
+            border: 4px solid rgba(255, 255, 255, 0.3);
         }
+        
+        .welcome-text { color: white; }
+        .welcome-text h1 {
+            font-size: 32px;
+            font-weight: 800;
+            margin-bottom: 5px;
+            color: white;
+            background: none;
+            -webkit-text-fill-color: white;
+        }
+        
+        .welcome-text p { font-size: 16px; opacity: 0.95; font-weight: 500; }
+        
+        .header-actions { display: flex; gap: 15px; }
+        
+        .header-btn {
+            padding: 12px 28px;
+            border-radius: 50px;
+            font-weight: 600;
+            text-decoration: none;
+            transition: all 0.3s ease;
+            font-size: 15px;
+        }
+        
+        .btn-white {
+            background: white;
+            color: #667eea;
+            box-shadow: 0 4px 15px rgba(255, 255, 255, 0.3);
+        }
+        
+        .btn-white:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 25px rgba(255, 255, 255, 0.5);
+        }
+        
+        .btn-outline {
+            background: transparent;
+            color: white;
+            border: 2px solid rgba(255, 255, 255, 0.5);
+        }
+        
+        .btn-outline:hover {
+            background: rgba(255, 255, 255, 0.2);
+            border-color: white;
+        }
+        
+        .dashboard-container { max-width: 1400px; margin: 0 auto; padding: 40px 30px; }
         
         .stats-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-            gap: 20px;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 25px;
             margin-bottom: 40px;
         }
         
         .stat-card {
             background: white;
-            border-radius: 16px;
-            padding: 25px;
-            box-shadow: 0 4px 20px rgba(0,0,0,0.08);
-            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.08);
+            transition: all 0.3s ease;
         }
         
-        .stat-card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 8px 30px rgba(0,0,0,0.12);
+        .stat-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 5px;
+            background: linear-gradient(90deg, #667eea, #764ba2);
         }
         
-        .stat-card .icon {
-            font-size: 40px;
-            margin-bottom: 15px;
+        .stat-card:hover { transform: translateY(-10px); box-shadow: 0 20px 60px rgba(0, 0, 0, 0.15); }
+        
+        .stat-icon { font-size: 48px; margin-bottom: 15px; }
+        
+        .stat-value {
+            font-size: 42px;
+            font-weight: 800;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 8px;
         }
         
-        .stat-card .value {
-            font-size: 32px;
-            font-weight: bold;
-            color: #2c3e50;
-            margin-bottom: 5px;
-        }
-        
-        .stat-card .label {
-            color: #7f8c8d;
-            font-size: 14px;
+        .stat-label {
+            font-size: 15px;
+            color: #6c757d;
+            font-weight: 600;
+            text-transform: uppercase;
         }
         
         .section {
             background: white;
-            border-radius: 20px;
-            padding: 30px;
+            border-radius: 24px;
+            padding: 35px;
             margin-bottom: 30px;
-            box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.08);
         }
         
-        .section-title {
-            font-size: 24px;
-            color: #2c3e50;
-            margin-bottom: 25px;
-            padding-bottom: 15px;
+        .section-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+            padding-bottom: 20px;
             border-bottom: 2px solid #f0f0f0;
         }
         
-        .reservation-card {
+        .section-title {
+            font-size: 26px;
+            font-weight: 800;
+            color: #212529;
             display: flex;
             align-items: center;
-            padding: 20px;
-            border: 1px solid #e9ecef;
-            border-radius: 12px;
-            margin-bottom: 15px;
+            gap: 12px;
+        }
+        
+        .reservations-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+            gap: 25px;
+        }
+        
+        .reservation-card {
+            background: linear-gradient(135deg, #f8f9fc 0%, #ffffff 100%);
+            border-radius: 16px;
+            padding: 25px;
+            border: 2px solid #e9ecef;
             transition: all 0.3s ease;
         }
         
         .reservation-card:hover {
             border-color: #667eea;
-            box-shadow: 0 4px 15px rgba(102, 126, 234, 0.1);
+            transform: translateY(-5px);
+            box-shadow: 0 15px 40px rgba(102, 126, 234, 0.15);
         }
         
-        .reservation-icon {
-            font-size: 36px;
-            margin-right: 20px;
-            width: 60px;
-            height: 60px;
+        .reservation-header {
             display: flex;
-            align-items: center;
-            justify-content: center;
-            background: linear-gradient(135deg, rgba(102, 126, 234, 0.1) 0%, rgba(118, 75, 162, 0.1) 100%);
-            border-radius: 12px;
+            justify-content: space-between;
+            margin-bottom: 20px;
         }
         
-        .reservation-details {
-            flex: 1;
-        }
-        
-        .reservation-details h4 {
-            color: #2c3e50;
-            margin-bottom: 5px;
-        }
-        
-        .reservation-details p {
-            color: #7f8c8d;
-            font-size: 14px;
-        }
+        .reservation-type { font-size: 32px; }
         
         .reservation-status {
             padding: 6px 16px;
             border-radius: 20px;
-            font-size: 13px;
-            font-weight: 600;
+            font-size: 12px;
+            font-weight: 700;
+            text-transform: uppercase;
         }
         
-        .status-confirmed {
-            background: #d4edda;
-            color: #155724;
+        .status-confirmed { background: linear-gradient(135deg, #11998e 0%, #38ef7d 100%); color: white; }
+        .status-pending { background: linear-gradient(135deg, #f2994a 0%, #f2c94c 100%); color: white; }
+        .status-cancelled { background: linear-gradient(135deg, #eb3349 0%, #f45c43 100%); color: white; }
+        
+        .reservation-info h3 { font-size: 18px; font-weight: 700; margin-bottom: 12px; }
+        
+        .reservation-detail {
+            display: flex;
+            gap: 8px;
+            margin-bottom: 8px;
+            font-size: 14px;
+            color: #6c757d;
         }
         
-        .status-pending {
-            background: #fff3cd;
-            color: #856404;
-        }
-        
-        .status-cancelled {
-            background: #f8d7da;
-            color: #721c24;
-        }
-        
-        .btn {
-            padding: 12px 24px;
-            border: none;
-            border-radius: 50px;
-            font-size: 15px;
-            font-weight: 600;
-            cursor: pointer;
-            text-decoration: none;
-            display: inline-block;
-            transition: all 0.3s ease;
-        }
-        
-        .btn-primary {
+        .reservation-price {
+            font-size: 24px;
+            font-weight: 800;
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-top: 15px;
         }
         
-        .btn-primary:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 6px 20px rgba(102, 126, 234, 0.3);
-        }
-        
-        .btn-outline {
-            background: white;
-            color: #667eea;
-            border: 2px solid #667eea;
-        }
-        
-        .btn-outline:hover {
-            background: #667eea;
-            color: white;
-        }
-        
-        .recommendations {
+        .recommendations-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 20px;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 25px;
         }
         
         .recommendation-card {
-            background: linear-gradient(135deg, rgba(102, 126, 234, 0.05) 0%, rgba(118, 75, 162, 0.05) 100%);
+            background: white;
             border-radius: 16px;
-            padding: 25px;
-            border: 2px solid transparent;
+            overflow: hidden;
+            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.1);
             transition: all 0.3s ease;
         }
         
         .recommendation-card:hover {
-            border-color: #667eea;
-            transform: translateY(-5px);
+            transform: translateY(-8px);
+            box-shadow: 0 15px 50px rgba(0, 0, 0, 0.2);
         }
         
-        .recommendation-card h4 {
-            color: #667eea;
-            margin-bottom: 10px;
-        }
+        .recommendation-image { width: 100%; height: 200px; object-fit: cover; }
+        .recommendation-content { padding: 25px; }
+        .recommendation-title { font-size: 20px; font-weight: 700; margin-bottom: 10px; }
+        .recommendation-desc { font-size: 14px; color: #6c757d; margin-bottom: 15px; line-height: 1.6; }
         
-        .recommendation-card p {
-            color: #7f8c8d;
+        .recommendation-price {
+            font-size: 28px;
+            font-weight: 800;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
             margin-bottom: 15px;
         }
         
-        .empty-state {
+        .btn-discover {
+            width: 100%;
+            padding: 14px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            border-radius: 50px;
+            font-weight: 700;
+            cursor: pointer;
+            text-decoration: none;
+            display: block;
             text-align: center;
-            padding: 60px 20px;
-            color: #7f8c8d;
         }
         
-        .empty-state .icon {
-            font-size: 80px;
-            margin-bottom: 20px;
-            opacity: 0.3;
+        .btn-discover:hover { transform: translateY(-3px); box-shadow: 0 10px 30px rgba(102, 126, 234, 0.4); }
+        
+        .quick-actions {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+        }
+        
+        .action-btn {
+            padding: 20px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border-radius: 16px;
+            text-decoration: none;
+            font-weight: 700;
+            text-align: center;
+            transition: all 0.3s ease;
+            box-shadow: 0 8px 20px rgba(102, 126, 234, 0.3);
+        }
+        
+        .action-btn:hover { transform: translateY(-5px); box-shadow: 0 15px 40px rgba(102, 126, 234, 0.5); }
+        
+        .action-btn.secondary {
+            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+            box-shadow: 0 8px 20px rgba(240, 147, 251, 0.3);
+        }
+        
+        .action-btn.success {
+            background: linear-gradient(135deg, #11998e 0%, #38ef7d 100%);
+            box-shadow: 0 8px 20px rgba(17, 153, 142, 0.3);
+        }
+        
+        .empty-state { text-align: center; padding: 60px 20px; color: #6c757d; }
+        .empty-state-icon { font-size: 80px; margin-bottom: 20px; opacity: 0.5; }
+        
+        @media (max-width: 768px) {
+            .dashboard-wrapper { padding-top: 200px; }
+            .header-content { flex-direction: column; gap: 20px; }
+            .header-actions { width: 100%; flex-direction: column; }
+            .header-btn { width: 100%; }
+            .stats-grid, .reservations-grid, .recommendations-grid { grid-template-columns: 1fr; }
         }
     </style>
 </head>
 <body>
-    <%@ include file="../common/navbar.jsp" %>
-    
-    <div class="dashboard-container">
-        <!-- Welcome Section -->
-        <div class="welcome-section">
-            <h1>👋 Bienvenue ${sessionScope.user.firstName} !</h1>
-            <p>Gérez vos voyages et découvrez de nouvelles destinations</p>
-        </div>
-        
-        <!-- Statistics Cards -->
-        <div class="stats-grid">
-            <div class="stat-card">
-                <div class="icon">📊</div>
-                <div class="value">${totalReservations}</div>
-                <div class="label">Réservations totales</div>
-            </div>
-            
-            <div class="stat-card">
-                <div class="icon">✅</div>
-                <div class="value">${confirmedCount}</div>
-                <div class="label">Réservations confirmées</div>
-            </div>
-            
-            <div class="stat-card">
-                <div class="icon">💰</div>
-                <div class="value">
-                    <fmt:formatNumber value="${totalSpent}" type="currency" currencySymbol="" maxFractionDigits="0"/> MAD
+    <div class="dashboard-wrapper">
+        <div class="dashboard-header">
+            <div class="header-content">
+                <div class="header-left">
+                    <div class="user-avatar">
+                        ${sessionScope.user.firstName.substring(0,1).toUpperCase()}
+                    </div>
+                    <div class="welcome-text">
+                        <h1>👋 Bonjour, ${sessionScope.user.firstName} !</h1>
+                        <p>✨ Bienvenue sur votre tableau de bord</p>
+                    </div>
                 </div>
-                <div class="label">Total dépensé</div>
-            </div>
-            
-            <div class="stat-card">
-                <div class="icon">
-                    <c:choose>
-                        <c:when test="${favoriteType == 'FLIGHT'}">✈️</c:when>
-                        <c:when test="${favoriteType == 'HOTEL'}">🏨</c:when>
-                        <c:when test="${favoriteType == 'CIRCUIT'}">🗺️</c:when>
-                    </c:choose>
+                <div class="header-actions">
+                    <a href="${pageContext.request.contextPath}/search/flights" class="header-btn btn-white">✈️ Rechercher</a>
+                    <a href="${pageContext.request.contextPath}/user/profile" class="header-btn btn-outline">👤 Profil</a>
+                    <a href="${pageContext.request.contextPath}/auth/logout" class="header-btn btn-outline">🚪 Déconnexion</a>
                 </div>
-                <div class="value">${favoriteType}</div>
-                <div class="label">Type préféré</div>
             </div>
         </div>
-        
-        <!-- Recent Reservations -->
-        <div class="section">
-            <h2 class="section-title">📅 Mes Dernières Réservations</h2>
-            
-            <c:choose>
-                <c:when test="${not empty recentReservations}">
-                    <c:forEach items="${recentReservations}" var="res">
-                        <div class="reservation-card">
-                            <div class="reservation-icon">
-                                <c:choose>
-                                    <c:when test="${res.type == 'FLIGHT'}">✈️</c:when>
-                                    <c:when test="${res.type == 'HOTEL'}">🏨</c:when>
-                                    <c:when test="${res.type == 'CIRCUIT'}">🗺️</c:when>
-                                </c:choose>
-                            </div>
-                            <div class="reservation-details">
-                                <h4>Réservation #${res.id} - ${res.type}</h4>
-                                <p>
-                                    <fmt:formatDate value="${res.createdAt}" pattern="dd/MM/yyyy à HH:mm"/> • 
-                                    <c:if test="${not empty res.payment}">
-                                        <fmt:formatNumber value="${res.payment.amount}" type="currency" currencySymbol=""/> MAD
-                                    </c:if>
-                                </p>
-                            </div>
-                            <span class="reservation-status status-${res.status.name().toLowerCase()}">
-                                <c:choose>
-                                    <c:when test="${res.status == 'CONFIRMEE'}">✓ Confirmée</c:when>
-                                    <c:when test="${res.status == 'EN_ATTENTE'}">⏳ En attente</c:when>
-                                    <c:when test="${res.status == 'ANNULEE'}">✕ Annulée</c:when>
-                                </c:choose>
-                            </span>
+
+        <div class="dashboard-container">
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-icon">📋</div>
+                    <div class="stat-value">${totalReservations}</div>
+                    <div class="stat-label">Total Réservations</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon">✅</div>
+                    <div class="stat-value">${confirmedReservations}</div>
+                    <div class="stat-label">Confirmées</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon">💰</div>
+                    <div class="stat-value"><fmt:formatNumber value="${totalSpent}" pattern="#,##0" /> €</div>
+                    <div class="stat-label">Total Dépensé</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon">⭐</div>
+                    <div class="stat-value">${favoriteType != null ? favoriteType : 'N/A'}</div>
+                    <div class="stat-label">Type Préféré</div>
+                </div>
+            </div>
+
+            <div class="section">
+                <div class="section-header">
+                    <h2 class="section-title">🎫 Mes Réservations</h2>
+                    <a href="${pageContext.request.contextPath}/reservation/list" class="btn-white" style="padding: 10px 20px; border-radius: 50px; text-decoration: none; font-weight: 600;">Voir tout</a>
+                </div>
+                
+                <c:choose>
+                    <c:when test="${not empty recentReservations}">
+                        <div class="reservations-grid">
+                            <c:forEach items="${recentReservations}" var="r">
+                                <div class="reservation-card">
+                                    <div class="reservation-header">
+                                        <span class="reservation-type">
+                                            <c:choose>
+                                                <c:when test="${r.type == 'FLIGHT'}">✈️</c:when>
+                                                <c:when test="${r.type == 'HOTEL'}">🏨</c:when>
+                                                <c:otherwise>🗺️</c:otherwise>
+                                            </c:choose>
+                                        </span>
+                                        <span class="reservation-status 
+                                            <c:choose>
+                                                <c:when test="${r.status == 'CONFIRMEE'}">status-confirmed</c:when>
+                                                <c:when test="${r.status == 'EN_ATTENTE'}">status-pending</c:when>
+                                                <c:otherwise>status-cancelled</c:otherwise>
+                                            </c:choose>">
+                                            ${r.status}
+                                        </span>
+                                    </div>
+                                    <div class="reservation-info">
+                                        <h3>Réservation #${r.id}</h3>
+                                        <div class="reservation-detail">📅 ${r.createdAt.toString().substring(0, 10)}</div>
+                                        <div class="reservation-detail">👥 ${r.numberOfPeople} personne(s)</div>
+                                        <div class="reservation-price">
+                                            <c:if test="${r.payment != null}">
+                                                <fmt:formatNumber value="${r.payment.amount}" pattern="#,##0.00" /> €
+                                            </c:if>
+                                        </div>
+                                    </div>
+                                </div>
+                            </c:forEach>
                         </div>
-                    </c:forEach>
-                    
-                    <div style="text-align: center; margin-top: 20px;">
-                        <a href="${pageContext.request.contextPath}/reservation/list" class="btn btn-outline">
-                            Voir toutes mes réservations →
-                        </a>
-                    </div>
-                </c:when>
-                <c:otherwise>
-                    <div class="empty-state">
-                        <div class="icon">📭</div>
-                        <h3>Aucune réservation</h3>
-                        <p>Commencez votre aventure en réservant votre premier voyage !</p>
-                        <a href="${pageContext.request.contextPath}/search/flights" class="btn btn-primary">
-                            Rechercher un vol
-                        </a>
-                    </div>
-                </c:otherwise>
-            </c:choose>
-        </div>
-        
-        <!-- Recommendations -->
-        <div class="section">
-            <h2 class="section-title">💡 Recommandations pour vous</h2>
-            <div class="recommendations">
-                <div class="recommendation-card">
-                    <h4>✈️ Vols Populaires</h4>
-                    <p>Découvrez nos vols les plus réservés vers des destinations exotiques</p>
-                    <a href="${pageContext.request.contextPath}/search/flights" class="btn btn-primary">
-                        Explorer
-                    </a>
+                    </c:when>
+                    <c:otherwise>
+                        <div class="empty-state">
+                            <div class="empty-state-icon">📭</div>
+                            <h3>Aucune réservation</h3>
+                            <p>Commencez votre aventure maintenant !</p>
+                            <a href="${pageContext.request.contextPath}/search/flights" class="btn-white" style="display: inline-block; padding: 12px 30px; border-radius: 50px; text-decoration: none; font-weight: 600;">Rechercher</a>
+                        </div>
+                    </c:otherwise>
+                </c:choose>
+            </div>
+
+            <div class="section">
+                <div class="section-header">
+                    <h2 class="section-title">🌟 Recommandations</h2>
                 </div>
-                
-                <div class="recommendation-card">
-                    <h4>🏨 Hôtels de Luxe</h4>
-                    <p>Séjournez dans les meilleurs hôtels avec des offres exclusives</p>
-                    <a href="${pageContext.request.contextPath}/search/hotels" class="btn btn-primary">
-                        Découvrir
-                    </a>
-                </div>
-                
-                <div class="recommendation-card">
-                    <h4>🗺️ Circuits Guidés</h4>
-                    <p>Explorez le monde avec nos circuits organisés et guides experts</p>
-                    <a href="${pageContext.request.contextPath}/search/circuits" class="btn btn-primary">
-                        Voir les circuits
-                    </a>
+                <div class="recommendations-grid">
+                    <div class="recommendation-card">
+                        <img src="https://images.unsplash.com/photo-1436491865332-7a61a109cc05?w=400" alt="Vol" class="recommendation-image">
+                        <div class="recommendation-content">
+                            <h3 class="recommendation-title">✈️ Vols dernière minute</h3>
+                            <p class="recommendation-desc">Offres exceptionnelles vers les destinations prisées</p>
+                            <div class="recommendation-price">À partir de 99€</div>
+                            <a href="${pageContext.request.contextPath}/search/flights" class="btn-discover">Découvrir</a>
+                        </div>
+                    </div>
+                    <div class="recommendation-card">
+                        <img src="https://images.unsplash.com/photo-1566073771259-6a8506099945?w=400" alt="Hôtel" class="recommendation-image">
+                        <div class="recommendation-content">
+                            <h3 class="recommendation-title">🏨 Hôtels de luxe</h3>
+                            <p class="recommendation-desc">Réductions jusqu'à -30% sur nos plus beaux établissements</p>
+                            <div class="recommendation-price">À partir de 150€/nuit</div>
+                            <a href="${pageContext.request.contextPath}/search/hotels" class="btn-discover">Découvrir</a>
+                        </div>
+                    </div>
+                    <div class="recommendation-card">
+                        <img src="https://images.unsplash.com/photo-1469854523086-cc02fe5d8800?w=400" alt="Circuit" class="recommendation-image">
+                        <div class="recommendation-content">
+                            <h3 class="recommendation-title">🗺️ Circuits organisés</h3>
+                            <p class="recommendation-desc">Aventures tout compris vers des destinations uniques</p>
+                            <div class="recommendation-price">À partir de 890€</div>
+                            <a href="${pageContext.request.contextPath}/search/circuits" class="btn-discover">Découvrir</a>
+                        </div>
+                    </div>
                 </div>
             </div>
-        </div>
-        
-        <!-- Quick Actions -->
-        <div class="section">
-            <h2 class="section-title">⚡ Actions Rapides</h2>
-            <div style="display: flex; gap: 15px; flex-wrap: wrap;">
-                <a href="${pageContext.request.contextPath}/user/profile" class="btn btn-outline">
-                    👤 Mon Profil
-                </a>
-                <a href="${pageContext.request.contextPath}/reservation/list" class="btn btn-outline">
-                    📋 Mes Réservations
-                </a>
-                <a href="${pageContext.request.contextPath}/search/destinations" class="btn btn-outline">
-                    🌍 Destinations
-                </a>
-                <a href="${pageContext.request.contextPath}/review/my-reviews" class="btn btn-outline">
-                    ⭐ Mes Avis
-                </a>
+
+            <div class="section">
+                <div class="section-header">
+                    <h2 class="section-title">⚡ Actions Rapides</h2>
+                </div>
+                <div class="quick-actions">
+                    <a href="${pageContext.request.contextPath}/search/flights" class="action-btn">✈️ Rechercher un Vol</a>
+                    <a href="${pageContext.request.contextPath}/search/hotels" class="action-btn secondary">🏨 Trouver un Hôtel</a>
+                    <a href="${pageContext.request.contextPath}/search/circuits" class="action-btn success">🗺️ Explorer les Circuits</a>
+                    <a href="${pageContext.request.contextPath}/reservation/list" class="action-btn">📋 Mes Réservations</a>
+                </div>
             </div>
         </div>
     </div>
