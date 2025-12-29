@@ -1,12 +1,11 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
-<%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>
 <!DOCTYPE html>
 <html lang="fr">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Tableau de bord - VoyageConnect</title>
+    <title>Changer le mot de passe - VoyageConnect</title>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
     <link rel="stylesheet" href="${pageContext.request.contextPath}/css/style.css">
     <style>
@@ -2850,334 +2849,383 @@ nav {
         break-inside: avoid;
     }
 }
-        /* Dashboard Specific Styles */
-        .dashboard-header {
+        /* Change Password Page Styles */
+        .password-header {
             background: linear-gradient(135deg, #003580 0%, #0071c2 100%);
             color: white;
             padding: 3rem 0;
             margin-bottom: 2rem;
         }
         
-        .dashboard-header h1 {
+        .password-header h1 {
             color: white;
             font-size: 2.5rem;
             font-weight: 800;
             margin-bottom: 0.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
         }
         
-        .user-avatar {
+        .breadcrumb-custom {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            color: rgba(255, 255, 255, 0.9);
+            font-size: 0.95rem;
+            margin-bottom: 1rem;
+        }
+        
+        .breadcrumb-custom a {
+            color: rgba(255, 255, 255, 0.9);
+            text-decoration: none;
+            transition: color 0.2s;
+        }
+        
+        .breadcrumb-custom a:hover {
+            color: white;
+        }
+        
+        .breadcrumb-custom i {
+            font-size: 0.75rem;
+        }
+        
+        /* Password Form Card */
+        .password-form-card {
+            background: white;
+            border-radius: 16px;
+            padding: 2.5rem;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+            border: 1px solid #e5e7eb;
+        }
+        
+        .form-header {
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+        
+        .form-header-icon {
             width: 80px;
             height: 80px;
             border-radius: 50%;
-            background: rgba(255, 255, 255, 0.2);
-            display: flex;
+            background: linear-gradient(135deg, #003580 0%, #0071c2 100%);
+            display: inline-flex;
             align-items: center;
             justify-content: center;
+            color: white;
             font-size: 2.5rem;
-            font-weight: 700;
-            backdrop-filter: blur(10px);
-            border: 3px solid rgba(255, 255, 255, 0.3);
-        }
-        
-        /* Stats Cards */
-        .stats-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-            gap: 1.5rem;
-            margin-bottom: 2rem;
-        }
-        
-        .stat-card {
-            background: white;
-            border-radius: 16px;
-            padding: 2rem;
-            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
-            text-align: center;
-            transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
-            border: 1px solid #e5e7eb;
-        }
-        
-        .stat-card:hover {
-            transform: translateY(-4px);
-            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
-            border-color: #0071c2;
-        }
-        
-        .stat-icon {
-            font-size: 3rem;
             margin-bottom: 1rem;
+            box-shadow: 0 8px 16px rgba(0, 113, 194, 0.3);
         }
         
-        .stat-icon.blue { color: #0071c2; }
-        .stat-icon.green { color: #00aa6c; }
-        .stat-icon.yellow { color: #febb02; }
-        .stat-icon.purple { color: #6366f1; }
-        
-        .stat-value {
-            font-size: 2.5rem;
-            font-weight: 800;
-            background: linear-gradient(135deg, #003580 0%, #0071c2 100%);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
+        .form-header h2 {
+            color: #003580;
+            font-weight: 700;
+            font-size: 1.75rem;
             margin-bottom: 0.5rem;
-            line-height: 1;
         }
         
-        .stat-label {
+        .form-header p {
             color: #6b7280;
-            font-weight: 600;
-            text-transform: uppercase;
-            font-size: 0.875rem;
-            letter-spacing: 0.5px;
+            font-size: 1rem;
         }
         
-        /* Section Cards */
-        .dashboard-section {
-            background: white;
-            border-radius: 16px;
-            padding: 2rem;
-            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
-            margin-bottom: 2rem;
-            border: 1px solid #e5e7eb;
-        }
-        
-        .section-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
+        /* Form Group */
+        .form-group {
             margin-bottom: 1.5rem;
         }
         
-        .section-title {
-            color: #003580;
-            font-weight: 700;
-            font-size: 1.5rem;
-            margin: 0;
-            padding-bottom: 0.25rem;
+        .form-label {
             display: flex;
             align-items: center;
             gap: 0.5rem;
-            
+            font-weight: 600;
+            color: #1a1a1a;
+            margin-bottom: 0.5rem;
+            font-size: 0.95rem;
         }
         
-        /* Reservation Cards */
-        .reservation-item {
-            background: #f8f9fa;
-            border-radius: 12px;
-            padding: 1.5rem;
-            margin-bottom: 1rem;
-            border: 1px solid #e5e7eb;
+        .form-label i {
+            color: #0071c2;
+            width: 18px;
+            text-align: center;
+        }
+        
+        .form-label .required {
+            color: #dc3545;
+        }
+        
+        /* Password Input Container */
+        .password-input-wrapper {
+            position: relative;
+        }
+        
+        .form-control {
+            width: 100%;
+            padding: 0.875rem 3rem 0.875rem 1rem;
+            font-size: 1rem;
+            border: 2px solid #e5e7eb;
+            border-radius: 8px;
+            background: #ffffff;
+            color: #1a1a1a;
             transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+            outline: none;
         }
         
-        .reservation-item:hover {
-            transform: translateX(4px);
+        .form-control:focus {
             border-color: #0071c2;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+            box-shadow: 0 0 0 3px rgba(0, 113, 194, 0.1);
         }
         
-        .reservation-icon {
-            width: 60px;
-            height: 60px;
-            border-radius: 12px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 1.75rem;
+        .form-control.error {
+            border-color: #dc3545;
         }
         
-        .reservation-icon.flight {
-            background: linear-gradient(135deg, #dbeafe 0%, #bfdbfe 100%);
-            color: #1d4ed8;
+        .form-control.error:focus {
+            box-shadow: 0 0 0 3px rgba(220, 53, 69, 0.1);
         }
         
-        .reservation-icon.hotel {
-            background: linear-gradient(135deg, #dcfce7 0%, #bbf7d0 100%);
-            color: #15803d;
-        }
-        
-        .reservation-icon.circuit {
-            background: linear-gradient(135deg, #fef3c7 0%, #fde68a 100%);
-            color: #a16207;
-        }
-        
-        .reservation-title {
-            color: #003580;
-            font-weight: 700;
-            font-size: 1.125rem;
-            margin-bottom: 0.25rem;
-        }
-        
-        .reservation-meta {
+        .toggle-password {
+            position: absolute;
+            right: 1rem;
+            top: 50%;
+            transform: translateY(-50%);
+            background: transparent;
+            border: none;
             color: #6b7280;
-            font-size: 0.875rem;
-            display: flex;
-            align-items: center;
-            gap: 1rem;
+            cursor: pointer;
+            padding: 0.5rem;
+            font-size: 1.25rem;
+            transition: color 0.2s;
         }
         
-        .status-badge {
-            display: inline-flex;
-            align-items: center;
-            gap: 0.5rem;
-            padding: 0.5rem 1rem;
-            border-radius: 9999px;
-            font-size: 0.875rem;
+        .toggle-password:hover {
+            color: #0071c2;
+        }
+        
+        /* Password Strength Meter */
+        .password-strength {
+            margin-top: 0.5rem;
+        }
+        
+        .strength-meter {
+            height: 6px;
+            background: #e5e7eb;
+            border-radius: 3px;
+            overflow: hidden;
+            margin-bottom: 0.5rem;
+        }
+        
+        .strength-meter-fill {
+            height: 100%;
+            transition: all 0.3s ease;
+            border-radius: 3px;
+        }
+        
+        .strength-text {
+            font-size: 0.85rem;
             font-weight: 600;
         }
         
-        .status-badge.confirmed {
-            background: #dcfce7;
-            color: #15803d;
+        .strength-weak .strength-meter-fill {
+            width: 33%;
+            background: #dc3545;
         }
         
-        .status-badge.pending {
-            background: #fef3c7;
-            color: #a16207;
+        .strength-weak .strength-text {
+            color: #dc3545;
         }
         
-        .status-badge.cancelled {
-            background: #fee2e2;
-            color: #dc2626;
+        .strength-medium .strength-meter-fill {
+            width: 66%;
+            background: #febb02;
         }
         
-        .reservation-price {
-            font-size: 1.75rem;
-            font-weight: 800;
+        .strength-medium .strength-text {
+            color: #d97706;
+        }
+        
+        .strength-strong .strength-meter-fill {
+            width: 100%;
+            background: #00aa6c;
+        }
+        
+        .strength-strong .strength-text {
             color: #00aa6c;
         }
         
-        /* Recommendation Cards */
-        .recommendations-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 1.5rem;
-        }
-        
-        .recommendation-card {
-            background: white;
-            border-radius: 16px;
-            overflow: hidden;
-            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
-            transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+        /* Password Requirements */
+        .password-requirements {
+            background: #f9fafb;
             border: 1px solid #e5e7eb;
+            border-radius: 8px;
+            padding: 1rem;
+            margin-top: 0.5rem;
         }
         
-        .recommendation-card:hover {
-            transform: translateY(-4px);
-            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
-        }
-        
-        .recommendation-image {
-            width: 100%;
-            height: 200px;
+        .password-requirements h4 {
+            font-size: 0.875rem;
+            font-weight: 600;
+            color: #1a1a1a;
+            margin-bottom: 0.75rem;
             display: flex;
             align-items: center;
-            justify-content: center;
-            font-size: 4rem;
-            position: relative;
-            overflow: hidden;
+            gap: 0.5rem;
         }
         
-        .recommendation-image.flights {
-            background: linear-gradient(135deg, #1e40af 0%, #3b82f6 100%);
-        }
-        
-        .recommendation-image.hotels {
-            background: linear-gradient(135deg, #059669 0%, #10b981 100%);
-        }
-        
-        .recommendation-image.circuits {
-            background: linear-gradient(135deg, #d97706 0%, #f59e0b 100%);
-        }
-        
-        .recommendation-content {
-            padding: 1.5rem;
-        }
-        
-        .recommendation-title {
-            color: #003580;
-            font-weight: 700;
-            font-size: 1.25rem;
-            margin-bottom: 0.5rem;
-        }
-        
-        .recommendation-description {
-            color: #6b7280;
-            font-size: 0.9rem;
-            margin-bottom: 1rem;
-            line-height: 1.6;
-        }
-        
-        .recommendation-price {
-            font-size: 1.5rem;
-            font-weight: 800;
-            color: #0071c2;
-            margin-bottom: 1rem;
-        }
-        
-        /* Quick Actions */
-        .quick-actions-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 1rem;
-        }
-        
-        /* Empty State */
-        .empty-state-dashboard {
-            text-align: center;
-            padding: 4rem 2rem;
-        }
-        
-        .empty-state-dashboard .empty-icon {
-            font-size: 5rem;
-            color: #e5e7eb;
-            margin-bottom: 1rem;
-        }
-        
-        .empty-state-dashboard h4 {
+        .requirement-item {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 0.85rem;
             color: #6b7280;
             margin-bottom: 0.5rem;
         }
         
-        .empty-state-dashboard p {
-            color: #9ca3af;
+        .requirement-item:last-child {
+            margin-bottom: 0;
+        }
+        
+        .requirement-item i {
+            font-size: 0.75rem;
+        }
+        
+        .requirement-item.met {
+            color: #00aa6c;
+        }
+        
+        .requirement-item.met i {
+            color: #00aa6c;
+        }
+        
+        /* Alert Messages */
+        .alert {
+            padding: 1rem 1.5rem;
+            border-radius: 12px;
             margin-bottom: 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            animation: slideDown 0.3s ease-out;
+        }
+        
+        @keyframes slideDown {
+            from {
+                opacity: 0;
+                transform: translateY(-10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        .alert-success {
+            background: #dcfce7;
+            border: 2px solid #bbf7d0;
+            color: #15803d;
+        }
+        
+        .alert-error {
+            background: #fee2e2;
+            border: 2px solid #fecaca;
+            color: #dc2626;
+        }
+        
+        .alert i {
+            font-size: 1.25rem;
+        }
+        
+        .btn-close-alert {
+            background: transparent;
+            border: none;
+            cursor: pointer;
+            padding: 0.25rem;
+            margin-left: auto;
+            opacity: 0.7;
+            transition: opacity 0.2s;
+        }
+        
+        .btn-close-alert:hover {
+            opacity: 1;
+        }
+        
+        /* Security Tips */
+        .security-tips {
+            background: #eff6ff;
+            border: 2px solid #bfdbfe;
+            border-radius: 12px;
+            padding: 1.25rem;
+            margin-bottom: 1.5rem;
+        }
+        
+        .security-tips h4 {
+            color: #1e40af;
+            font-weight: 700;
+            font-size: 1rem;
+            margin-bottom: 0.75rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        
+        .security-tips ul {
+            margin: 0;
+            padding-left: 1.5rem;
+        }
+        
+        .security-tips li {
+            color: #1e40af;
+            margin-bottom: 0.5rem;
+            font-size: 0.9rem;
+        }
+        
+        /* Form Actions */
+        .form-actions {
+            display: flex;
+            gap: 1rem;
+            margin-top: 2rem;
+            padding-top: 1.5rem;
+            border-top: 2px solid #f3f4f6;
+        }
+        
+        .btn-cancel {
+            background: transparent;
+            color: #6b7280;
+            border: 2px solid #e5e7eb;
+            transition: all 0.25s ease;
+        }
+        
+        .btn-cancel:hover {
+            background: #f3f4f6;
+            color: #1a1a1a;
+            border-color: #d1d5db;
         }
         
         /* Responsive */
         @media (max-width: 768px) {
-            .dashboard-header {
-                padding: 2rem 0;
-            }
-            
-            .dashboard-header h1 {
+            .password-header h1 {
                 font-size: 1.75rem;
+                flex-direction: column;
+                gap: 0.5rem;
             }
             
-            .user-avatar {
+            .password-form-card {
+                padding: 1.5rem;
+            }
+            
+            .form-header-icon {
                 width: 60px;
                 height: 60px;
                 font-size: 2rem;
             }
             
-            .stats-grid {
-                grid-template-columns: 1fr;
-            }
-            
-            .section-header {
+            .form-actions {
                 flex-direction: column;
-                align-items: flex-start;
-                gap: 1rem;
             }
             
-            .recommendations-grid {
-                grid-template-columns: 1fr;
-            }
-            
-            .quick-actions-grid {
-                grid-template-columns: 1fr;
+            .form-actions .btn {
+                width: 100%;
             }
         }
     </style>
@@ -3185,251 +3233,326 @@ nav {
 <body class="page-wrapper">
     <jsp:include page="/WEB-INF/views/common/navbar.jsp" />
     
-    <!-- Dashboard Header -->
-    <div class="dashboard-header">
+    <!-- Page Header -->
+    <div class="password-header">
         <div class="container">
-            <div style="display: flex; align-items: center; gap: 1.5rem;">
-                <div class="user-avatar">
-                    ${sessionScope.user.firstName.substring(0,1).toUpperCase()}
-                </div>
-                <div>
-                    <h1>
-                        <i class="fas fa-hand-wave"></i> Bonjour, ${sessionScope.user.firstName} !
-                    </h1>
-                </div>
+            <div class="breadcrumb-custom">
+                <a href="${pageContext.request.contextPath}/user/dashboard">
+                    <i class="fas fa-home"></i> Tableau de bord
+                </a>
+                <i class="fas fa-chevron-right"></i>
+                <a href="${pageContext.request.contextPath}/user/profile">
+                    <i class="fas fa-user"></i> Profil
+                </a>
+                <i class="fas fa-chevron-right"></i>
+                <span>Mot de passe</span>
             </div>
+            <h1>
+                <i class="fas fa-lock"></i> Changer le mot de passe
+            </h1>
         </div>
     </div>
-
+    
     <div class="container">
-        <!-- Statistics Cards -->
-        <div class="stats-grid">
-            <div class="stat-card">
-                <div class="stat-icon blue">
-                    <i class="fas fa-clipboard-list"></i>
-                </div>
-                <div class="stat-value">${totalReservations}</div>
-                <div class="stat-label">Total Réservations</div>
-            </div>
-            
-            <div class="stat-card">
-                <div class="stat-icon green">
-                    <i class="fas fa-check-circle"></i>
-                </div>
-                <div class="stat-value">${confirmedReservations}</div>
-                <div class="stat-label">Confirmées</div>
-            </div>
-            
-            <div class="stat-card">
-                <div class="stat-icon yellow">
-                    <i class="fas fa-euro-sign"></i>
-                </div>
-                <div class="stat-value">
-                    <fmt:formatNumber value="${totalSpent}" pattern="#,##0" /> €
-                </div>
-                <div class="stat-label">Total Dépensé</div>
-            </div>
-            
-            <div class="stat-card">
-                <div class="stat-icon purple">
-                    <i class="fas fa-star"></i>
-                </div>
-                <div class="stat-value">
-                    ${favoriteType != null ? favoriteType : 'N/A'}
-                </div>
-                <div class="stat-label">Type Préféré</div>
-            </div>
-        </div>
-
-        <!-- Recent Reservations Section -->
-        <div class="dashboard-section">
-            <div class="section-header">
-                <h3 class="section-title">
-                    <i class="fas fa-ticket-alt"></i> Mes Réservations Récentes
-                </h3>
-                <a href="${pageContext.request.contextPath}/reservation/list" class="btn btn-highlight btn-sm">
-                    <i class="fas fa-list"></i> Voir tout
-                </a>
-            </div>
-            
-            <c:choose>
-                <c:when test="${not empty recentReservations}">
-                    <c:forEach items="${recentReservations}" var="r">
-                        <div class="reservation-item">
-                            <div style="display: flex; justify-content: space-between; align-items: center; gap: 1.5rem;">
-                                <!-- Left Section: Icon + Info -->
-                                <div style="display: flex; align-items: center; gap: 1rem; flex: 1;">
-                                    <div class="reservation-icon 
-                                        <c:choose>
-                                            <c:when test="${r.type == 'FLIGHT'}">flight</c:when>
-                                            <c:when test="${r.type == 'HOTEL'}">hotel</c:when>
-                                            <c:when test="${r.type == 'CIRCUIT'}">circuit</c:when>
-                                        </c:choose>">
-                                        <c:choose>
-                                            <c:when test="${r.type == 'FLIGHT'}">
-                                                <i class="fas fa-plane"></i>
-                                            </c:when>
-                                            <c:when test="${r.type == 'HOTEL'}">
-                                                <i class="fas fa-hotel"></i>
-                                            </c:when>
-                                            <c:when test="${r.type == 'CIRCUIT'}">
-                                                <i class="fas fa-route"></i>
-                                            </c:when>
-                                        </c:choose>
-                                    </div>
-                                    
-                                    <div>
-                                        <h5 class="reservation-title">
-                                            Réservation #${r.id}
-                                        </h5>
-                                        <div class="reservation-meta">
-                                            <span>
-                                                <i class="fas fa-calendar-alt"></i>
-                                                ${r.createdAt.toString().substring(0, 10)}
-                                            </span>
-                                            <span>
-                                                <i class="fas fa-users"></i>
-                                                ${r.numberOfPeople} personne(s)
-                                            </span>
-                                        </div>
-                                    </div>
+        <div class="row">
+            <div class="col-md-6 mx-auto">
+                <!-- Success Message -->
+                <c:if test="${not empty success}">
+                    <div class="alert alert-success">
+                        <i class="fas fa-check-circle"></i>
+                        <span>${success}</span>
+                        <button type="button" class="btn-close-alert" onclick="this.parentElement.remove()">
+                            <i class="fas fa-times"></i>
+                        </button>
+                    </div>
+                </c:if>
+                
+                <!-- Error Message -->
+                <c:if test="${not empty error}">
+                    <div class="alert alert-error">
+                        <i class="fas fa-exclamation-circle"></i>
+                        <span>${error}</span>
+                        <button type="button" class="btn-close-alert" onclick="this.parentElement.remove()">
+                            <i class="fas fa-times"></i>
+                        </button>
+                    </div>
+                </c:if>
+                
+                <!-- Password Form Card -->
+                <div class="password-form-card">
+                    <div class="form-header">
+                        <div class="form-header-icon">
+                            <i class="fas fa-key"></i>
+                        </div>
+                        <h2>Modifier votre mot de passe</h2>
+                        <p>Pour votre sécurité, choisissez un mot de passe fort</p>
+                    </div>
+                    
+                    <!-- Security Tips -->
+                    <div class="security-tips">
+                        <h4>
+                            <i class="fas fa-shield-alt"></i> Conseils de sécurité
+                        </h4>
+                        <ul>
+                            <li>Utilisez au moins 8 caractères</li>
+                            <li>Mélangez majuscules, minuscules et chiffres</li>
+                            <li>Ajoutez des caractères spéciaux (!@#$%)</li>
+                            <li>Ne réutilisez pas d'anciens mots de passe</li>
+                        </ul>
+                    </div>
+                    
+                    <form action="${pageContext.request.contextPath}/user/change-password" method="POST" id="changePasswordForm">
+                        <!-- Current Password -->
+                        <div class="form-group">
+                            <label for="oldPassword" class="form-label">
+                                <i class="fas fa-lock"></i>
+                                Mot de passe actuel
+                                <span class="required">*</span>
+                            </label>
+                            <div class="password-input-wrapper">
+                                <input type="password" 
+                                       class="form-control" 
+                                       id="oldPassword" 
+                                       name="oldPassword" 
+                                       required
+                                       placeholder="Votre mot de passe actuel">
+                                <button type="button" class="toggle-password" onclick="togglePassword('oldPassword')">
+                                    <i class="fas fa-eye"></i>
+                                </button>
+                            </div>
+                        </div>
+                        
+                        <!-- New Password -->
+                        <div class="form-group">
+                            <label for="newPassword" class="form-label">
+                                <i class="fas fa-key"></i>
+                                Nouveau mot de passe
+                                <span class="required">*</span>
+                            </label>
+                            <div class="password-input-wrapper">
+                                <input type="password" 
+                                       class="form-control" 
+                                       id="newPassword" 
+                                       name="newPassword" 
+                                       required
+                                       minlength="8"
+                                       placeholder="Votre nouveau mot de passe">
+                                <button type="button" class="toggle-password" onclick="togglePassword('newPassword')">
+                                    <i class="fas fa-eye"></i>
+                                </button>
+                            </div>
+                            
+                            <!-- Password Strength Meter -->
+                            <div class="password-strength" id="passwordStrength" style="display: none;">
+                                <div class="strength-meter">
+                                    <div class="strength-meter-fill"></div>
                                 </div>
-                                
-                                <!-- Right Section: Status + Price -->
-                                <div style="text-align: right;">
-                                    <div style="margin-bottom: 0.75rem;">
-                                        <span class="status-badge 
-                                            <c:choose>
-                                                <c:when test="${r.status == 'CONFIRMEE'}">confirmed</c:when>
-                                                <c:when test="${r.status == 'EN_ATTENTE'}">pending</c:when>
-                                                <c:otherwise>cancelled</c:otherwise>
-                                            </c:choose>">
-                                            <c:choose>
-                                                <c:when test="${r.status == 'CONFIRMEE'}">
-                                                    <i class="fas fa-check-circle"></i>
-                                                </c:when>
-                                                <c:when test="${r.status == 'EN_ATTENTE'}">
-                                                    <i class="fas fa-clock"></i>
-                                                </c:when>
-                                                <c:otherwise>
-                                                    <i class="fas fa-times-circle"></i>
-                                                </c:otherwise>
-                                            </c:choose>
-                                            ${r.status}
-                                        </span>
-                                    </div>
-                                    <c:if test="${r.payment != null}">
-                                        <div class="reservation-price">
-                                            <fmt:formatNumber value="${r.payment.amount}" pattern="#,##0.00" /> €
-                                        </div>
-                                    </c:if>
+                                <div class="strength-text"></div>
+                            </div>
+                            
+                            <!-- Password Requirements -->
+                            <div class="password-requirements">
+                                <h4>
+                                    <i class="fas fa-info-circle"></i> Exigences du mot de passe
+                                </h4>
+                                <div class="requirement-item" id="req-length">
+                                    <i class="fas fa-circle"></i>
+                                    <span>Au moins 8 caractères</span>
+                                </div>
+                                <div class="requirement-item" id="req-uppercase">
+                                    <i class="fas fa-circle"></i>
+                                    <span>Au moins une majuscule</span>
+                                </div>
+                                <div class="requirement-item" id="req-lowercase">
+                                    <i class="fas fa-circle"></i>
+                                    <span>Au moins une minuscule</span>
+                                </div>
+                                <div class="requirement-item" id="req-number">
+                                    <i class="fas fa-circle"></i>
+                                    <span>Au moins un chiffre</span>
                                 </div>
                             </div>
                         </div>
-                    </c:forEach>
-                </c:when>
-                <c:otherwise>
-                    <div class="empty-state-dashboard">
-                        <div class="empty-icon">
-                            <i class="fas fa-inbox"></i>
+                        
+                        <!-- Confirm Password -->
+                        <div class="form-group">
+                            <label for="confirmPassword" class="form-label">
+                                <i class="fas fa-check-double"></i>
+                                Confirmer le nouveau mot de passe
+                                <span class="required">*</span>
+                            </label>
+                            <div class="password-input-wrapper">
+                                <input type="password" 
+                                       class="form-control" 
+                                       id="confirmPassword" 
+                                       name="confirmPassword" 
+                                       required
+                                       placeholder="Confirmez votre nouveau mot de passe">
+                                <button type="button" class="toggle-password" onclick="togglePassword('confirmPassword')">
+                                    <i class="fas fa-eye"></i>
+                                </button>
+                            </div>
+                            <small class="form-help" id="passwordMatchMessage" style="display: none;"></small>
                         </div>
-                        <h4>Aucune réservation</h4>
-                        <p>Commencez votre aventure maintenant !</p>
-                        <a href="${pageContext.request.contextPath}/search/flights" class="btn btn-highlight">
-                            <i class="fas fa-search"></i> Commencer à rechercher
-                        </a>
-                    </div>
-                </c:otherwise>
-            </c:choose>
-        </div>
-
-        <!-- Recommendations Section -->
-        <div class="dashboard-section">
-            <h3 class="section-title">
-                <i class="fas fa-sparkles"></i> Recommandations pour vous
-            </h3>
-            <div class="recommendations-grid">
-                <!-- Flights Card -->
-                <div class="recommendation-card">
-                    <div class="recommendation-image flights">
-                        <i class="fas fa-plane-departure"></i>
-                    </div>
-                    <div class="recommendation-content">
-                        <h5 class="recommendation-title">Vols dernière minute</h5>
-                        <p class="recommendation-description">
-                            Offres exceptionnelles vers les destinations les plus prisées
-                        </p>
-                        <div class="recommendation-price">
-                            <i class="fas fa-tag"></i> À partir de 99€
+                        
+                        <!-- Form Actions -->
+                        <div class="form-actions">
+                            <button type="submit" class="btn btn-highlight" id="submitBtn">
+                                <i class="fas fa-save"></i> Changer le mot de passe
+                            </button>
+                            <a href="${pageContext.request.contextPath}/user/profile" class="btn btn-cancel">
+                                <i class="fas fa-times"></i> Annuler
+                            </a>
                         </div>
-                        <a href="${pageContext.request.contextPath}/search/flights" class="btn btn-highlight btn-block">
-                            <i class="fas fa-search"></i> Découvrir
-                        </a>
-                    </div>
+                    </form>
                 </div>
-                
-                <!-- Hotels Card -->
-                <div class="recommendation-card">
-                    <div class="recommendation-image hotels">
-                        <i class="fas fa-hotel"></i>
-                    </div>
-                    <div class="recommendation-content">
-                        <h5 class="recommendation-title">Hôtels de luxe</h5>
-                        <p class="recommendation-description">
-                            Réductions jusqu'à -30% sur nos plus beaux établissements
-                        </p>
-                        <div class="recommendation-price">
-                            <i class="fas fa-tag"></i> À partir de 150€/nuit
-                        </div>
-                        <a href="${pageContext.request.contextPath}/search/hotels" class="btn btn-highlight btn-block">
-                            <i class="fas fa-search"></i> Découvrir
-                        </a>
-                    </div>
-                </div>
-                
-                <!-- Circuits Card -->
-                <div class="recommendation-card">
-                    <div class="recommendation-image circuits">
-                        <i class="fas fa-map-marked-alt"></i>
-                    </div>
-                    <div class="recommendation-content">
-                        <h5 class="recommendation-title">Circuits organisés</h5>
-                        <p class="recommendation-description">
-                            Aventures tout compris vers des destinations uniques
-                        </p>
-                        <div class="recommendation-price">
-                            <i class="fas fa-tag"></i> À partir de 890€
-                        </div>
-                        <a href="${pageContext.request.contextPath}/search/circuits" class="btn btn-highlight btn-block">
-                            <i class="fas fa-search"></i> Découvrir
-                        </a>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <!-- Quick Actions Section -->
-        <div class="dashboard-section">
-            <h3 class="section-title">
-                <i class="fas fa-bolt"></i> Actions Rapides
-            </h3>
-            <div class="quick-actions-grid">
-                <a href="${pageContext.request.contextPath}/search/flights" class="btn btn-highlight btn-block">
-                    <i class="fas fa-plane"></i> Rechercher un Vol
-                </a>
-                <a href="${pageContext.request.contextPath}/search/hotels" class="btn btn-highlight btn-block">
-                    <i class="fas fa-hotel"></i> Trouver un Hôtel
-                </a>
-                <a href="${pageContext.request.contextPath}/search/circuits" class="btn btn-highlight btn-block">
-                    <i class="fas fa-route"></i> Explorer les Circuits
-                </a>
-                <a href="${pageContext.request.contextPath}/reservation/list" class="btn btn-outline-primary btn-block">
-                    <i class="fas fa-list"></i> Mes Réservations
-                </a>
             </div>
         </div>
     </div>
-      <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-   
+    
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        // Toggle Password Visibility
+        function togglePassword(fieldId) {
+            const field = document.getElementById(fieldId);
+            const button = field.nextElementSibling;
+            const icon = button.querySelector('i');
+            
+            if (field.type === 'password') {
+                field.type = 'text';
+                icon.classList.remove('fa-eye');
+                icon.classList.add('fa-eye-slash');
+            } else {
+                field.type = 'password';
+                icon.classList.remove('fa-eye-slash');
+                icon.classList.add('fa-eye');
+            }
+        }
+        
+        // Password Strength Checker
+        const newPasswordField = document.getElementById('newPassword');
+        const strengthDiv = document.getElementById('passwordStrength');
+        const strengthFill = strengthDiv.querySelector('.strength-meter-fill');
+        const strengthText = strengthDiv.querySelector('.strength-text');
+        
+        newPasswordField.addEventListener('input', function() {
+            const password = this.value;
+            
+            if (password.length === 0) {
+                strengthDiv.style.display = 'none';
+                return;
+            }
+            
+            strengthDiv.style.display = 'block';
+            
+            let strength = 0;
+            
+            // Check requirements
+            const hasLength = password.length >= 8;
+            const hasUppercase = /[A-Z]/.test(password);
+            const hasLowercase = /[a-z]/.test(password);
+            const hasNumber = /[0-9]/.test(password);
+            const hasSpecial = /[!@#$%^&*(),.?":{}|<>]/.test(password);
+            
+            // Update requirement indicators
+            updateRequirement('req-length', hasLength);
+            updateRequirement('req-uppercase', hasUppercase);
+            updateRequirement('req-lowercase', hasLowercase);
+            updateRequirement('req-number', hasNumber);
+            
+            // Calculate strength
+            if (hasLength) strength++;
+            if (hasUppercase) strength++;
+            if (hasLowercase) strength++;
+            if (hasNumber) strength++;
+            if (hasSpecial) strength++;
+            
+            // Update strength meter
+            strengthDiv.className = 'password-strength';
+            if (strength <= 2) {
+                strengthDiv.classList.add('strength-weak');
+                strengthText.textContent = 'Faible';
+            } else if (strength <= 4) {
+                strengthDiv.classList.add('strength-medium');
+                strengthText.textContent = 'Moyen';
+            } else {
+                strengthDiv.classList.add('strength-strong');
+                strengthText.textContent = 'Fort';
+            }
+        });
+        
+        function updateRequirement(id, met) {
+            const element = document.getElementById(id);
+            const icon = element.querySelector('i');
+            
+            if (met) {
+                element.classList.add('met');
+                icon.classList.remove('fa-circle');
+                icon.classList.add('fa-check-circle');
+            } else {
+                element.classList.remove('met');
+                icon.classList.remove('fa-check-circle');
+                icon.classList.add('fa-circle');
+            }
+        }
+        
+        // Password Match Checker
+        const confirmPasswordField = document.getElementById('confirmPassword');
+        const matchMessage = document.getElementById('passwordMatchMessage');
+        
+        confirmPasswordField.addEventListener('input', function() {
+            const newPassword = newPasswordField.value;
+            const confirmPassword = this.value;
+            
+            if (confirmPassword.length === 0) {
+                matchMessage.style.display = 'none';
+                return;
+            }
+            
+            matchMessage.style.display = 'block';
+            
+            if (newPassword === confirmPassword) {
+                matchMessage.style.color = '#00aa6c';
+                matchMessage.innerHTML = '<i class="fas fa-check-circle"></i> Les mots de passe correspondent';
+            } else {
+                matchMessage.style.color = '#dc3545';
+                matchMessage.innerHTML = '<i class="fas fa-times-circle"></i> Les mots de passe ne correspondent pas';
+            }
+        });
+        
+        // Form Validation
+        document.getElementById('changePasswordForm').addEventListener('submit', function(e) {
+            const newPassword = newPasswordField.value;
+            const confirmPassword = confirmPasswordField.value;
+            
+            if (newPassword !== confirmPassword) {
+                e.preventDefault();
+                alert('Les mots de passe ne correspondent pas');
+                confirmPasswordField.focus();
+                return false;
+            }
+            
+            if (newPassword.length < 8) {
+                e.preventDefault();
+                alert('Le mot de passe doit contenir au moins 8 caractères');
+                newPasswordField.focus();
+                return false;
+            }
+            
+            return true;
+        });
+        
+        // Auto-hide alerts
+        setTimeout(function() {
+            const alerts = document.querySelectorAll('.alert');
+            alerts.forEach(function(alert) {
+                alert.style.transition = 'opacity 0.5s ease';
+                alert.style.opacity = '0';
+                setTimeout(function() {
+                    alert.remove();
+                }, 500);
+            });
+        }, 5000);
+    </script>
 </body>
 </html>

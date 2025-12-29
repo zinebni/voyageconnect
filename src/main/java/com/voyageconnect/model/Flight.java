@@ -1,15 +1,28 @@
 package com.voyageconnect.model;
 
-import javax.persistence.*;
-import javax.validation.constraints.DecimalMin;
-import javax.validation.constraints.Min;
-import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotNull;
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
+import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
+import javax.persistence.Table;
+import javax.persistence.Transient;
+import javax.validation.constraints.DecimalMin;
+import javax.validation.constraints.Min;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 
 /**
  * Entité représentant un vol
@@ -67,6 +80,13 @@ public class Flight implements Serializable {
 
     @Column(nullable = false)
     private Boolean active = true;
+
+    // Champ temporaire pour le formatage de la date dans la JSP
+    @Transient
+    private String departureDateFormatted;
+
+    @Transient
+    private String arrivalDateFormatted;
 
     @OneToMany(mappedBy = "flight", fetch = FetchType.LAZY)
     private List<Reservation> reservations = new ArrayList<>();
@@ -195,6 +215,23 @@ public class Flight implements Serializable {
 
     public boolean isAvailable(int requestedSeats) {
         return active && availableSeats >= requestedSeats;
+    }
+
+    //geter et setter pour departureDateFormatted et arrivalDateFormatted
+    public String getDepartureDateFormatted() {
+        return departureDateFormatted;
+    }
+
+    public void setDepartureDateFormatted(String departureDateFormatted) {
+        this.departureDateFormatted = departureDateFormatted;
+    }
+
+    public String getArrivalDateFormatted() {
+        return arrivalDateFormatted;
+    }
+
+    public void setArrivalDateFormatted(String arrivalDateFormatted) {
+        this.arrivalDateFormatted = arrivalDateFormatted;
     }
 
     @Override

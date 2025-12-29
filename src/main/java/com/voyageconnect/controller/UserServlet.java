@@ -1,15 +1,16 @@
 package com.voyageconnect.controller;
 
-import com.voyageconnect.exception.BusinessException;
-import com.voyageconnect.model.User;
-import com.voyageconnect.service.UserService;
+import java.io.IOException;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
-import java.io.IOException;
+
+import com.voyageconnect.exception.BusinessException;
+import com.voyageconnect.model.User;
+import com.voyageconnect.service.UserService;
 
 /**
  * Servlet pour la gestion du profil utilisateur
@@ -24,6 +25,11 @@ public class UserServlet extends HttpServlet {
             throws ServletException, IOException {
         
         String action = getAction(request);
+        
+        System.out.println("=== UserServlet GET ===");
+        System.out.println("Action: " + action);
+        System.out.println("PathInfo: " + request.getPathInfo());
+        System.out.println("RequestURI: " + request.getRequestURI());
         
         switch (action) {
             case "dashboard":
@@ -68,6 +74,7 @@ public class UserServlet extends HttpServlet {
      */
     private void showDashboard(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
+        System.out.println(">>> Affichage du dashboard");
         request.getRequestDispatcher("/WEB-INF/views/user/dashboard.jsp").forward(request, response);
     }
 
@@ -77,13 +84,47 @@ public class UserServlet extends HttpServlet {
     private void showProfile(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         
+        System.out.println(">>> Affichage du profil");
+        
         Long userId = getUserIdFromSession(request);
+        
+        System.out.println("User ID from session: " + userId);
+        
+        // Vérifier si l'utilisateur est connecté
+        if (userId == null) {
+            System.out.println("ERROR: userId est null - redirection vers login");
+            response.sendRedirect(request.getContextPath() + "/auth/login");
+            return;
+        }
+        
         try {
+            System.out.println("Récupération de l'utilisateur avec ID: " + userId);
             User user = userService.getUserById(userId);
+            
+            System.out.println("Utilisateur trouvé: " + user.getEmail());
+            System.out.println("Forward vers: /WEB-INF/views/user/profile.jsp");
+            
             request.setAttribute("user", user);
             request.getRequestDispatcher("/WEB-INF/views/user/profile.jsp").forward(request, response);
+            
+            System.out.println("Forward réussi");
+            
         } catch (BusinessException e) {
-            request.setAttribute("error", e.getMessage());
+            System.out.println("ERROR BusinessException: " + e.getMessage());
+            e.printStackTrace();
+            
+            // Mettre l'erreur en session pour l'afficher sur le dashboard
+            HttpSession session = request.getSession();
+            session.setAttribute("error", "Erreur lors du chargement du profil: " + e.getMessage());
+            
+            response.sendRedirect(request.getContextPath() + "/user/dashboard");
+        } catch (Exception e) {
+            System.out.println("ERROR Exception: " + e.getMessage());
+            e.printStackTrace();
+            
+            HttpSession session = request.getSession();
+            session.setAttribute("error", "Erreur inattendue: " + e.getMessage());
+            
             response.sendRedirect(request.getContextPath() + "/user/dashboard");
         }
     }
@@ -94,13 +135,23 @@ public class UserServlet extends HttpServlet {
     private void showEditProfile(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         
+        System.out.println(">>> Affichage du formulaire d'édition");
+        
         Long userId = getUserIdFromSession(request);
+        
+        if (userId == null) {
+            response.sendRedirect(request.getContextPath() + "/auth/login");
+            return;
+        }
+        
         try {
             User user = userService.getUserById(userId);
             request.setAttribute("user", user);
             request.getRequestDispatcher("/WEB-INF/views/user/edit-profile.jsp").forward(request, response);
         } catch (BusinessException e) {
-            request.setAttribute("error", e.getMessage());
+            e.printStackTrace();
+            HttpSession session = request.getSession();
+            session.setAttribute("error", e.getMessage());
             response.sendRedirect(request.getContextPath() + "/user/dashboard");
         }
     }
@@ -120,6 +171,12 @@ public class UserServlet extends HttpServlet {
             throws ServletException, IOException {
         
         Long userId = getUserIdFromSession(request);
+        
+        if (userId == null) {
+            response.sendRedirect(request.getContextPath() + "/auth/login");
+            return;
+        }
+        
         String firstName = request.getParameter("firstName");
         String lastName = request.getParameter("lastName");
         String phone = request.getParameter("phone");
@@ -131,13 +188,24 @@ public class UserServlet extends HttpServlet {
             // Mettre à jour la session
             HttpSession session = request.getSession();
             session.setAttribute("user", updatedUser);
+            session.setAttribute("userId", updatedUser.getId());
             
             request.setAttribute("success", "Profil mis à jour avec succès");
             request.setAttribute("user", updatedUser);
             request.getRequestDispatcher("/WEB-INF/views/user/profile.jsp").forward(request, response);
             
         } catch (BusinessException e) {
+            e.printStackTrace();
             request.setAttribute("error", e.getMessage());
+            
+            // Re-charger l'utilisateur pour le formulaire
+            try {
+                User user = userService.getUserById(userId);
+                request.setAttribute("user", user);
+            } catch (BusinessException ex) {
+                // Ignore
+            }
+            
             request.getRequestDispatcher("/WEB-INF/views/user/edit-profile.jsp").forward(request, response);
         }
     }
@@ -149,6 +217,12 @@ public class UserServlet extends HttpServlet {
             throws ServletException, IOException {
         
         Long userId = getUserIdFromSession(request);
+        
+        if (userId == null) {
+            response.sendRedirect(request.getContextPath() + "/auth/login");
+            return;
+        }
+        
         String oldPassword = request.getParameter("oldPassword");
         String newPassword = request.getParameter("newPassword");
         String confirmPassword = request.getParameter("confirmPassword");
@@ -161,10 +235,14 @@ public class UserServlet extends HttpServlet {
         
         try {
             userService.changePassword(userId, oldPassword, newPassword);
-            request.setAttribute("success", "Mot de passe modifié avec succès");
-            request.getRequestDispatcher("/WEB-INF/views/user/dashboard.jsp").forward(request, response);
+            
+            HttpSession session = request.getSession();
+            session.setAttribute("success", "Mot de passe modifié avec succès");
+            
+            response.sendRedirect(request.getContextPath() + "/user/dashboard");
             
         } catch (BusinessException e) {
+            e.printStackTrace();
             request.setAttribute("error", e.getMessage());
             request.getRequestDispatcher("/WEB-INF/views/user/change-password.jsp").forward(request, response);
         }
@@ -174,8 +252,38 @@ public class UserServlet extends HttpServlet {
      * Récupère l'ID de l'utilisateur depuis la session
      */
     private Long getUserIdFromSession(HttpServletRequest request) {
-        HttpSession session = request.getSession();
-        return (Long) session.getAttribute("userId");
+        HttpSession session = request.getSession(false);
+        
+        System.out.println("=== getUserIdFromSession ===");
+        
+        if (session == null) {
+            System.out.println("Session est null");
+            return null;
+        }
+        
+        System.out.println("Session ID: " + session.getId());
+        
+        // Essayer d'abord avec userId
+        Object userIdObj = session.getAttribute("userId");
+        System.out.println("userId attribute: " + userIdObj);
+        
+        if (userIdObj != null) {
+            return (Long) userIdObj;
+        }
+        
+        // Sinon essayer avec user.getId()
+        Object userObj = session.getAttribute("user");
+        System.out.println("user attribute: " + userObj);
+        
+        if (userObj != null && userObj instanceof User) {
+            User user = (User) userObj;
+            Long id = user.getId();
+            System.out.println("user.getId(): " + id);
+            return id;
+        }
+        
+        System.out.println("Aucun userId trouvé dans la session");
+        return null;
     }
 
     /**

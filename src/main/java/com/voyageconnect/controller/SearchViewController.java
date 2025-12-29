@@ -1,18 +1,22 @@
 package com.voyageconnect.controller;
 
-import com.voyageconnect.model.*;
-import com.voyageconnect.service.SearchService;
-
-import javax.servlet.ServletException;
-import javax.servlet.http.HttpServlet;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
+
+import javax.servlet.ServletException;
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+import com.voyageconnect.model.Circuit;
+import com.voyageconnect.model.Destination;
+import com.voyageconnect.model.Flight;
+import com.voyageconnect.model.Hotel;
+import com.voyageconnect.service.SearchService;
 
 /**
  * Servlet MVC pour l'affichage des pages de recherche (HTML/JSP)
@@ -83,40 +87,83 @@ public class SearchViewController extends HttpServlet {
     private void showFlightsPage(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         
-        // Récupérer les paramètres de recherche
-        Long destinationId = getParameterAsLong(request, "destinationId");
-        String departureCity = request.getParameter("departureCity");
-        String departureDateStr = request.getParameter("departureDate");
-        Integer passengers = getParameterAsInt(request, "passengers");
-        BigDecimal maxPrice = getParameterAsBigDecimal(request, "maxPrice");
-        
-        LocalDateTime departureDate = null;
-        if (departureDateStr != null && !departureDateStr.isEmpty()) {
-            try {
-                departureDate = LocalDate.parse(departureDateStr, DateTimeFormatter.ISO_DATE).atStartOfDay();
-            } catch (Exception e) {
-                request.setAttribute("error", "Format de date invalide");
+        try {
+            // Récupérer les paramètres de recherche
+            Long destinationId = getParameterAsLong(request, "destinationId");
+            String departureCity = request.getParameter("departureCity");
+            String departureDateStr = request.getParameter("departureDate");
+            Integer passengers = getParameterAsInt(request, "passengers");
+            BigDecimal maxPrice = getParameterAsBigDecimal(request, "maxPrice");
+            
+            LocalDateTime departureDate = null;
+            if (departureDateStr != null && !departureDateStr.isEmpty()) {
+                try {
+                    departureDate = LocalDate.parse(departureDateStr, DateTimeFormatter.ISO_DATE).atStartOfDay();
+                } catch (Exception e) {
+                    request.setAttribute("error", "Format de date invalide");
+                }
             }
+            
+            // Recherche des vols
+            List<Flight> flights = searchService.searchFlights(
+                    destinationId, departureCity, departureDate, passengers, maxPrice);
+
+            System.out.println("Nombre de vols trouvés: " + flights.size());
+
+            // Formatage des dates pour la JSP (JSP ne supporte pas LocalDateTime)
+            DateTimeFormatter fmt = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm");
+
+            for (int i = 0; i < flights.size(); i++) {
+                Flight f = flights.get(i);
+                try {
+                    if (f.getDepartureDate() != null) {
+                        f.setDepartureDateFormatted(f.getDepartureDate().format(fmt));
+                    } else {
+                        f.setDepartureDateFormatted("N/A");
+                    }
+                    if (f.getArrivalDate() != null) {
+                        f.setArrivalDateFormatted(f.getArrivalDate().format(fmt));
+                    } else {
+                        f.setArrivalDateFormatted("N/A");
+                    }
+                    // S'assurer que la destination est bien initialisée
+                    if (f.getDestination() != null) {
+                        String destName = f.getDestination().getName();
+                        System.out.println("Vol " + i + ": " + f.getFlightNumber() + " -> " + destName);
+                    } else {
+                        System.out.println("Vol " + i + ": " + f.getFlightNumber() + " -> DESTINATION NULL!");
+                    }
+                } catch (Exception e) {
+                    System.err.println("Erreur lors du formatage du vol index " + i + " (id=" + f.getId() + "): " + e.getMessage());
+                    e.printStackTrace();
+                }
+            }
+
+            
+            // Charger aussi les destinations pour le formulaire
+            List<Destination> destinations = searchService.getActiveDestinations();
+        
+            // Passer les résultats à la JSP
+            request.setAttribute("flights", flights);
+            request.setAttribute("destinations", destinations);
+            request.setAttribute("selectedDestinationId", destinationId);
+            request.setAttribute("departureCity", departureCity);
+            request.setAttribute("departureDate", departureDateStr);
+            request.setAttribute("passengers", passengers);
+            request.setAttribute("maxPrice", maxPrice);
+            
+            request.getRequestDispatcher("/WEB-INF/views/search/flights.jsp").forward(request, response);
+            
+        } catch (Exception e) {
+            System.err.println("Erreur globale dans showFlightsPage: " + e.getMessage());
+            e.printStackTrace();
+            request.setAttribute("error", "Une erreur s'est produite lors de la recherche des vols.");
+            request.getRequestDispatcher("/WEB-INF/views/search/flights.jsp").forward(request, response);
         }
-        
-        // Recherche des vols
-        List<Flight> flights = searchService.searchFlights(
-                destinationId, departureCity, departureDate, passengers, maxPrice);
-        
-        // Charger aussi les destinations pour le formulaire
-        List<Destination> destinations = searchService.getActiveDestinations();
-        
-        // Passer les résultats à la JSP
-        request.setAttribute("flights", flights);
-        request.setAttribute("destinations", destinations);
-        request.setAttribute("selectedDestinationId", destinationId);
-        request.setAttribute("departureCity", departureCity);
-        request.setAttribute("departureDate", departureDateStr);
-        request.setAttribute("passengers", passengers);
-        request.setAttribute("maxPrice", maxPrice);
-        
-        request.getRequestDispatcher("/WEB-INF/views/search/flights.jsp").forward(request, response);
     }
+
+
+   
 
     /**
      * Page de recherche d'hôtels

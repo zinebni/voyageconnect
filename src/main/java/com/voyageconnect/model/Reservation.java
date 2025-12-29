@@ -1,11 +1,27 @@
 package com.voyageconnect.model;
 
-import javax.persistence.*;
-import javax.validation.constraints.DecimalMin;
-import javax.validation.constraints.NotNull;
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
+
+import javax.persistence.CascadeType;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
+import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.OneToOne;
+import javax.persistence.PrePersist;
+import javax.persistence.PreUpdate;
+import javax.persistence.Table;
+import javax.persistence.Transient;
+import javax.validation.constraints.DecimalMin;
+import javax.validation.constraints.NotNull;
 
 /**
  * Entité représentant une réservation
@@ -69,6 +85,10 @@ public class Reservation implements Serializable {
 
     @Column(name = "updated_at")
     private LocalDateTime updatedAt;
+    
+    // Champ temporaire pour le formatage de la date dans la JSP
+    @Transient
+    private String createdAtFormatted;
 
     @OneToOne(mappedBy = "reservation", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private Payment payment;
@@ -222,6 +242,15 @@ public class Reservation implements Serializable {
         this.payment = payment;
     }
 
+    // Getter et Setter pour createdAtFormatted
+    public String getCreatedAtFormatted() {
+        return createdAtFormatted;
+    }
+
+    public void setCreatedAtFormatted(String createdAtFormatted) {
+        this.createdAtFormatted = createdAtFormatted;
+    }
+    
     @Override
     public String toString() {
         return "Reservation{" +

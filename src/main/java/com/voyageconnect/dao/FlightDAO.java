@@ -1,13 +1,14 @@
 package com.voyageconnect.dao;
 
-import com.voyageconnect.model.Flight;
-import com.voyageconnect.model.FlightClass;
-
-import javax.persistence.EntityManager;
-import javax.persistence.TypedQuery;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.List;
+
+import javax.persistence.EntityManager;
+import javax.persistence.TypedQuery;
+
+import com.voyageconnect.model.Flight;
+import com.voyageconnect.model.FlightClass;
 
 /**
  * DAO pour l'entité Flight
@@ -38,7 +39,9 @@ public class FlightDAO extends GenericDAO<Flight> {
                                                 String departureCity, LocalDateTime departureDate, 
                                                 Integer minSeats) {
         StringBuilder jpql = new StringBuilder(
-                "SELECT f FROM Flight f WHERE f.active = true ");
+                "SELECT DISTINCT f FROM Flight f "
+                + "LEFT JOIN FETCH f.destination d "
+                + "WHERE f.active = true ");
         
         if (destinationId != null) {
             jpql.append("AND f.destination.id = :destinationId ");
@@ -82,7 +85,9 @@ public class FlightDAO extends GenericDAO<Flight> {
      */
     public List<Flight> findByPriceRange(EntityManager em, BigDecimal minPrice, BigDecimal maxPrice) {
         TypedQuery<Flight> query = em.createQuery(
-                "SELECT f FROM Flight f WHERE f.active = true " +
+                "SELECT DISTINCT f FROM Flight f " +
+                "LEFT JOIN FETCH f.destination d " +
+                "WHERE f.active = true " +
                 "AND f.price BETWEEN :min AND :max " +
                 "ORDER BY f.price ASC", Flight.class);
         query.setParameter("min", minPrice);
@@ -98,7 +103,9 @@ public class FlightDAO extends GenericDAO<Flight> {
      */
     public List<Flight> findByAirline(EntityManager em, String airline) {
         TypedQuery<Flight> query = em.createQuery(
-                "SELECT f FROM Flight f WHERE f.active = true " +
+                "SELECT DISTINCT f FROM Flight f " +
+                "LEFT JOIN FETCH f.destination d " +
+                "WHERE f.active = true " +
                 "AND LOWER(f.airline) = LOWER(:airline) " +
                 "ORDER BY f.departureDate ASC", Flight.class);
         query.setParameter("airline", airline);
@@ -113,7 +120,9 @@ public class FlightDAO extends GenericDAO<Flight> {
      */
     public List<Flight> findByClass(EntityManager em, FlightClass flightClass) {
         TypedQuery<Flight> query = em.createQuery(
-                "SELECT f FROM Flight f WHERE f.active = true " +
+                "SELECT DISTINCT f FROM Flight f " +
+                "LEFT JOIN FETCH f.destination d " +
+                "WHERE f.active = true " +
                 "AND f.flightClass = :class " +
                 "ORDER BY f.departureDate ASC", Flight.class);
         query.setParameter("class", flightClass);
@@ -128,7 +137,9 @@ public class FlightDAO extends GenericDAO<Flight> {
      */
     public List<Flight> findByDestination(EntityManager em, Long destinationId) {
         TypedQuery<Flight> query = em.createQuery(
-                "SELECT f FROM Flight f WHERE f.destination.id = :destId " +
+                "SELECT DISTINCT f FROM Flight f " +
+                "LEFT JOIN FETCH f.destination d " +
+                "WHERE f.destination.id = :destId " +
                 "AND f.active = true " +
                 "ORDER BY f.departureDate ASC", Flight.class);
         query.setParameter("destId", destinationId);

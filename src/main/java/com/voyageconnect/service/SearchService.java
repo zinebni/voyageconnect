@@ -1,5 +1,12 @@
 package com.voyageconnect.service;
 
+import java.math.BigDecimal;
+import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
+
+import javax.persistence.EntityManager;
+
 import com.voyageconnect.dao.CircuitDAO;
 import com.voyageconnect.dao.DestinationDAO;
 import com.voyageconnect.dao.FlightDAO;
@@ -9,12 +16,6 @@ import com.voyageconnect.model.Destination;
 import com.voyageconnect.model.Flight;
 import com.voyageconnect.model.Hotel;
 import com.voyageconnect.util.JPAUtil;
-
-import javax.persistence.EntityManager;
-import java.math.BigDecimal;
-import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * Service pour la recherche de voyages
@@ -40,7 +41,14 @@ public class SearchService {
             
             // Filtrer par prix si spécifié
             if (maxPrice != null) {
-                flights.removeIf(f -> f.getPrice().compareTo(maxPrice) > 0);
+                flights.removeIf(f -> f.getPrice() != null && f.getPrice().compareTo(maxPrice) > 0);
+            }
+            
+            // Forcer l'initialisation des relations lazy avant la fermeture de l'EntityManager
+            for (Flight f : flights) {
+                if (f.getDestination() != null) {
+                    f.getDestination().getName(); // Force l'initialisation
+                }
             }
             
             return flights;

@@ -1,10 +1,10 @@
 package com.voyageconnect.controller;
 
-import com.voyageconnect.dao.CircuitDAO;
-import com.voyageconnect.dao.FlightDAO;
-import com.voyageconnect.dao.HotelDAO;
-import com.voyageconnect.model.*;
-import com.voyageconnect.util.JPAUtil;
+import java.io.IOException;
+import java.time.LocalDateTime;
+import java.util.Optional;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import javax.persistence.EntityManager;
 import javax.servlet.ServletException;
@@ -12,11 +12,18 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
-import java.io.IOException;
-import java.time.LocalDateTime;
-import java.util.Optional;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+
+import com.voyageconnect.dao.CircuitDAO;
+import com.voyageconnect.dao.FlightDAO;
+import com.voyageconnect.dao.HotelDAO;
+import com.voyageconnect.model.Circuit;
+import com.voyageconnect.model.Flight;
+import com.voyageconnect.model.Hotel;
+import com.voyageconnect.model.Reservation;
+import com.voyageconnect.model.ReservationStatus;
+import com.voyageconnect.model.ReservationType;
+import com.voyageconnect.model.User;
+import com.voyageconnect.util.JPAUtil;
 
 /**
  * Servlet pour afficher le formulaire de nouvelle réservation

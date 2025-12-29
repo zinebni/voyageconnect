@@ -1,22 +1,29 @@
 package com.voyageconnect.controller;
 
-import com.voyageconnect.dao.*;
-import com.voyageconnect.model.Reservation;
-import com.voyageconnect.model.ReservationStatus;
-import com.voyageconnect.util.JPAUtil;
+import java.io.IOException;
+import java.math.BigDecimal;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.util.List;
+import java.util.Map;
+import java.util.logging.Logger;
+import java.util.stream.Collectors;
 
 import javax.persistence.EntityManager;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.io.IOException;
-import java.math.BigDecimal;
-import java.time.LocalDateTime;
-import java.util.List;
-import java.util.Map;
-import java.util.logging.Logger;
-import java.util.stream.Collectors;
+
+import com.voyageconnect.dao.CircuitDAO;
+import com.voyageconnect.dao.DestinationDAO;
+import com.voyageconnect.dao.FlightDAO;
+import com.voyageconnect.dao.HotelDAO;
+import com.voyageconnect.dao.ReservationDAO;
+import com.voyageconnect.dao.UserDAO;
+import com.voyageconnect.model.Reservation;
+import com.voyageconnect.model.ReservationStatus;
+import com.voyageconnect.util.JPAUtil;
 
 /**
  * Servlet pour le tableau de bord administrateur avec statistiques globales
@@ -85,6 +92,22 @@ public class AdminDashboardServlet extends HttpServlet {
                     .sorted((r1, r2) -> r2.getCreatedAt().compareTo(r1.getCreatedAt()))
                     .limit(10)
                     .collect(Collectors.toList());
+
+            //format date in jsp
+            // Formatage date pour la JSP (JSP ne supporte pas LocalDateTime)
+
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm");
+            for (Reservation r : recentReservations) {
+                if (r.getCreatedAt() != null) {
+                        r.setCreatedAtFormatted(r.getCreatedAt().format(formatter));
+                } else {
+                        r.setCreatedAtFormatted("");
+                }
+           }
+
+
+
+                    
             
             // Destinations populaires (par nombre de réservations)
             Map<String, Long> popularDestinations = allReservations.stream()

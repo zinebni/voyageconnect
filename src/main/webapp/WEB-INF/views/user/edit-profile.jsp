@@ -1,12 +1,11 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
-<%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>
 <!DOCTYPE html>
 <html lang="fr">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Tableau de bord - VoyageConnect</title>
+    <title>Modifier mon profil - VoyageConnect</title>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
     <link rel="stylesheet" href="${pageContext.request.contextPath}/css/style.css">
     <style>
@@ -2850,334 +2849,291 @@ nav {
         break-inside: avoid;
     }
 }
-        /* Dashboard Specific Styles */
-        .dashboard-header {
+        /* Edit Profile Page Styles */
+        .edit-profile-header {
             background: linear-gradient(135deg, #003580 0%, #0071c2 100%);
             color: white;
             padding: 3rem 0;
             margin-bottom: 2rem;
         }
         
-        .dashboard-header h1 {
+        .edit-profile-header h1 {
             color: white;
             font-size: 2.5rem;
             font-weight: 800;
             margin-bottom: 0.5rem;
-        }
-        
-        .user-avatar {
-            width: 80px;
-            height: 80px;
-            border-radius: 50%;
-            background: rgba(255, 255, 255, 0.2);
             display: flex;
             align-items: center;
-            justify-content: center;
-            font-size: 2.5rem;
-            font-weight: 700;
-            backdrop-filter: blur(10px);
-            border: 3px solid rgba(255, 255, 255, 0.3);
+            gap: 0.75rem;
         }
         
-        /* Stats Cards */
-        .stats-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-            gap: 1.5rem;
-            margin-bottom: 2rem;
+        .breadcrumb-custom {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            color: rgba(255, 255, 255, 0.9);
+            font-size: 0.95rem;
         }
         
-        .stat-card {
+        .breadcrumb-custom a {
+            color: rgba(255, 255, 255, 0.9);
+            text-decoration: none;
+            transition: color 0.2s;
+        }
+        
+        .breadcrumb-custom a:hover {
+            color: white;
+        }
+        
+        .breadcrumb-custom i {
+            font-size: 0.75rem;
+        }
+        
+        /* Form Card */
+        .edit-form-card {
             background: white;
             border-radius: 16px;
             padding: 2rem;
             box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
-            text-align: center;
-            transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
             border: 1px solid #e5e7eb;
         }
         
-        .stat-card:hover {
-            transform: translateY(-4px);
-            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
-            border-color: #0071c2;
-        }
-        
-        .stat-icon {
-            font-size: 3rem;
-            margin-bottom: 1rem;
-        }
-        
-        .stat-icon.blue { color: #0071c2; }
-        .stat-icon.green { color: #00aa6c; }
-        .stat-icon.yellow { color: #febb02; }
-        .stat-icon.purple { color: #6366f1; }
-        
-        .stat-value {
-            font-size: 2.5rem;
-            font-weight: 800;
-            background: linear-gradient(135deg, #003580 0%, #0071c2 100%);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-            margin-bottom: 0.5rem;
-            line-height: 1;
-        }
-        
-        .stat-label {
-            color: #6b7280;
-            font-weight: 600;
-            text-transform: uppercase;
-            font-size: 0.875rem;
-            letter-spacing: 0.5px;
-        }
-        
-        /* Section Cards */
-        .dashboard-section {
-            background: white;
-            border-radius: 16px;
-            padding: 2rem;
-            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+        .form-section {
             margin-bottom: 2rem;
-            border: 1px solid #e5e7eb;
         }
         
-        .section-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 1.5rem;
+        .form-section:last-child {
+            margin-bottom: 0;
         }
         
         .section-title {
             color: #003580;
             font-weight: 700;
-            font-size: 1.5rem;
-            margin: 0;
-            padding-bottom: 0.25rem;
+            font-size: 1.25rem;
+            margin-bottom: 1.5rem;
             display: flex;
             align-items: center;
             gap: 0.5rem;
-            
+            padding-bottom: 0.75rem;
+            border-bottom: 2px solid #f3f4f6;
         }
         
-        /* Reservation Cards */
-        .reservation-item {
-            background: #f8f9fa;
-            border-radius: 12px;
-            padding: 1.5rem;
-            margin-bottom: 1rem;
-            border: 1px solid #e5e7eb;
-            transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
-        }
-        
-        .reservation-item:hover {
-            transform: translateX(4px);
-            border-color: #0071c2;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
-        }
-        
-        .reservation-icon {
-            width: 60px;
-            height: 60px;
-            border-radius: 12px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 1.75rem;
-        }
-        
-        .reservation-icon.flight {
-            background: linear-gradient(135deg, #dbeafe 0%, #bfdbfe 100%);
-            color: #1d4ed8;
-        }
-        
-        .reservation-icon.hotel {
-            background: linear-gradient(135deg, #dcfce7 0%, #bbf7d0 100%);
-            color: #15803d;
-        }
-        
-        .reservation-icon.circuit {
-            background: linear-gradient(135deg, #fef3c7 0%, #fde68a 100%);
-            color: #a16207;
-        }
-        
-        .reservation-title {
-            color: #003580;
-            font-weight: 700;
-            font-size: 1.125rem;
-            margin-bottom: 0.25rem;
-        }
-        
-        .reservation-meta {
-            color: #6b7280;
-            font-size: 0.875rem;
-            display: flex;
-            align-items: center;
-            gap: 1rem;
-        }
-        
-        .status-badge {
-            display: inline-flex;
-            align-items: center;
-            gap: 0.5rem;
-            padding: 0.5rem 1rem;
-            border-radius: 9999px;
-            font-size: 0.875rem;
-            font-weight: 600;
-        }
-        
-        .status-badge.confirmed {
-            background: #dcfce7;
-            color: #15803d;
-        }
-        
-        .status-badge.pending {
-            background: #fef3c7;
-            color: #a16207;
-        }
-        
-        .status-badge.cancelled {
-            background: #fee2e2;
-            color: #dc2626;
-        }
-        
-        .reservation-price {
-            font-size: 1.75rem;
-            font-weight: 800;
-            color: #00aa6c;
-        }
-        
-        /* Recommendation Cards */
-        .recommendations-grid {
+        .form-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            grid-template-columns: repeat(2, 1fr);
             gap: 1.5rem;
         }
         
-        .recommendation-card {
-            background: white;
-            border-radius: 16px;
-            overflow: hidden;
-            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
-            transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
-            border: 1px solid #e5e7eb;
+        .form-grid-full {
+            grid-column: 1 / -1;
         }
         
-        .recommendation-card:hover {
-            transform: translateY(-4px);
-            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
+        .form-group {
+            display: flex;
+            flex-direction: column;
         }
         
-        .recommendation-image {
-            width: 100%;
-            height: 200px;
+        .form-label {
             display: flex;
             align-items: center;
-            justify-content: center;
-            font-size: 4rem;
-            position: relative;
-            overflow: hidden;
-        }
-        
-        .recommendation-image.flights {
-            background: linear-gradient(135deg, #1e40af 0%, #3b82f6 100%);
-        }
-        
-        .recommendation-image.hotels {
-            background: linear-gradient(135deg, #059669 0%, #10b981 100%);
-        }
-        
-        .recommendation-image.circuits {
-            background: linear-gradient(135deg, #d97706 0%, #f59e0b 100%);
-        }
-        
-        .recommendation-content {
-            padding: 1.5rem;
-        }
-        
-        .recommendation-title {
-            color: #003580;
-            font-weight: 700;
-            font-size: 1.25rem;
+            gap: 0.5rem;
+            font-weight: 600;
+            color: #1a1a1a;
             margin-bottom: 0.5rem;
+            font-size: 0.95rem;
         }
         
-        .recommendation-description {
-            color: #6b7280;
-            font-size: 0.9rem;
-            margin-bottom: 1rem;
-            line-height: 1.6;
-        }
-        
-        .recommendation-price {
-            font-size: 1.5rem;
-            font-weight: 800;
+        .form-label i {
             color: #0071c2;
-            margin-bottom: 1rem;
-        }
-        
-        /* Quick Actions */
-        .quick-actions-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 1rem;
-        }
-        
-        /* Empty State */
-        .empty-state-dashboard {
+            width: 18px;
             text-align: center;
-            padding: 4rem 2rem;
         }
         
-        .empty-state-dashboard .empty-icon {
-            font-size: 5rem;
-            color: #e5e7eb;
-            margin-bottom: 1rem;
+        .form-label .required {
+            color: #dc3545;
         }
         
-        .empty-state-dashboard h4 {
-            color: #6b7280;
-            margin-bottom: 0.5rem;
+        .form-control {
+            width: 100%;
+            padding: 0.875rem 1rem;
+            font-size: 1rem;
+            border: 2px solid #e5e7eb;
+            border-radius: 8px;
+            background: #ffffff;
+            color: #1a1a1a;
+            transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+            outline: none;
         }
         
-        .empty-state-dashboard p {
+        .form-control:focus {
+            border-color: #0071c2;
+            box-shadow: 0 0 0 3px rgba(0, 113, 194, 0.1);
+        }
+        
+        .form-control:disabled {
+            background: #f3f4f6;
             color: #9ca3af;
+            cursor: not-allowed;
+        }
+        
+        .form-control.error {
+            border-color: #dc3545;
+        }
+        
+        .form-control.error:focus {
+            box-shadow: 0 0 0 3px rgba(220, 53, 69, 0.1);
+        }
+        
+        .form-help {
+            font-size: 0.85rem;
+            color: #6b7280;
+            margin-top: 0.375rem;
+        }
+        
+        .form-help i {
+            margin-right: 0.25rem;
+        }
+        
+        .form-error {
+            font-size: 0.85rem;
+            color: #dc3545;
+            margin-top: 0.375rem;
+            display: flex;
+            align-items: center;
+            gap: 0.375rem;
+        }
+        
+        /* Alert Messages */
+        .alert {
+            padding: 1rem 1.5rem;
+            border-radius: 12px;
             margin-bottom: 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            animation: slideDown 0.3s ease-out;
+        }
+        
+        @keyframes slideDown {
+            from {
+                opacity: 0;
+                transform: translateY(-10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        .alert-success {
+            background: #dcfce7;
+            border: 2px solid #bbf7d0;
+            color: #15803d;
+        }
+        
+        .alert-error {
+            background: #fee2e2;
+            border: 2px solid #fecaca;
+            color: #dc2626;
+        }
+        
+        .alert i {
+            font-size: 1.25rem;
+        }
+        
+        .btn-close-alert {
+            background: transparent;
+            border: none;
+            cursor: pointer;
+            padding: 0.25rem;
+            margin-left: auto;
+            opacity: 0.7;
+            transition: opacity 0.2s;
+        }
+        
+        .btn-close-alert:hover {
+            opacity: 1;
+        }
+        
+        /* Action Buttons */
+        .form-actions {
+            display: flex;
+            gap: 1rem;
+            margin-top: 2rem;
+            padding-top: 1.5rem;
+            border-top: 2px solid #f3f4f6;
+        }
+        
+        .btn-cancel {
+            background: transparent;
+            color: #6b7280;
+            border: 2px solid #e5e7eb;
+            transition: all 0.25s ease;
+        }
+        
+        .btn-cancel:hover {
+            background: #f3f4f6;
+            color: #1a1a1a;
+            border-color: #d1d5db;
+        }
+        
+        /* Info Box */
+        .info-box {
+            background: #eff6ff;
+            border: 2px solid #bfdbfe;
+            border-radius: 12px;
+            padding: 1rem 1.25rem;
+            margin-bottom: 1.5rem;
+            display: flex;
+            gap: 0.75rem;
+        }
+        
+        .info-box i {
+            color: #1d4ed8;
+            font-size: 1.25rem;
+            flex-shrink: 0;
+            margin-top: 0.125rem;
+        }
+        
+        .info-box-content {
+            flex: 1;
+        }
+        
+        .info-box-content strong {
+            color: #1e40af;
+            display: block;
+            margin-bottom: 0.25rem;
+        }
+        
+        .info-box-content p {
+            color: #1e40af;
+            margin: 0;
+            font-size: 0.9rem;
         }
         
         /* Responsive */
         @media (max-width: 768px) {
-            .dashboard-header {
-                padding: 2rem 0;
-            }
-            
-            .dashboard-header h1 {
+            .edit-profile-header h1 {
                 font-size: 1.75rem;
-            }
-            
-            .user-avatar {
-                width: 60px;
-                height: 60px;
-                font-size: 2rem;
-            }
-            
-            .stats-grid {
-                grid-template-columns: 1fr;
-            }
-            
-            .section-header {
                 flex-direction: column;
-                align-items: flex-start;
+                gap: 0.5rem;
+            }
+            
+            .form-grid {
+                grid-template-columns: 1fr;
                 gap: 1rem;
             }
             
-            .recommendations-grid {
-                grid-template-columns: 1fr;
+            .form-actions {
+                flex-direction: column;
             }
             
-            .quick-actions-grid {
-                grid-template-columns: 1fr;
+            .form-actions .btn {
+                width: 100%;
+            }
+            
+            .edit-form-card {
+                padding: 1.5rem;
             }
         }
     </style>
@@ -3185,251 +3141,244 @@ nav {
 <body class="page-wrapper">
     <jsp:include page="/WEB-INF/views/common/navbar.jsp" />
     
-    <!-- Dashboard Header -->
-    <div class="dashboard-header">
+    <!-- Page Header -->
+    <div class="edit-profile-header">
         <div class="container">
-            <div style="display: flex; align-items: center; gap: 1.5rem;">
-                <div class="user-avatar">
-                    ${sessionScope.user.firstName.substring(0,1).toUpperCase()}
-                </div>
-                <div>
-                    <h1>
-                        <i class="fas fa-hand-wave"></i> Bonjour, ${sessionScope.user.firstName} !
-                    </h1>
-                </div>
+            <div class="breadcrumb-custom">
+                <a href="${pageContext.request.contextPath}/user/dashboard">
+                    <i class="fas fa-home"></i> Tableau de bord
+                </a>
+                <i class="fas fa-chevron-right"></i>
+                <a href="${pageContext.request.contextPath}/user/profile">
+                    <i class="fas fa-user"></i> Profil
+                </a>
+                <i class="fas fa-chevron-right"></i>
+                <span>Modifier</span>
             </div>
+            <h1>
+                <i class="fas fa-user-edit"></i> Modifier mon profil
+            </h1>
         </div>
     </div>
-
+    
     <div class="container">
-        <!-- Statistics Cards -->
-        <div class="stats-grid">
-            <div class="stat-card">
-                <div class="stat-icon blue">
-                    <i class="fas fa-clipboard-list"></i>
-                </div>
-                <div class="stat-value">${totalReservations}</div>
-                <div class="stat-label">Total Réservations</div>
+        <!-- Success Message -->
+        <c:if test="${not empty success}">
+            <div class="alert alert-success">
+                <i class="fas fa-check-circle"></i>
+                <span>${success}</span>
+                <button type="button" class="btn-close-alert" onclick="this.parentElement.remove()">
+                    <i class="fas fa-times"></i>
+                </button>
             </div>
-            
-            <div class="stat-card">
-                <div class="stat-icon green">
-                    <i class="fas fa-check-circle"></i>
-                </div>
-                <div class="stat-value">${confirmedReservations}</div>
-                <div class="stat-label">Confirmées</div>
+        </c:if>
+        
+        <!-- Error Message -->
+        <c:if test="${not empty error}">
+            <div class="alert alert-error">
+                <i class="fas fa-exclamation-circle"></i>
+                <span>${error}</span>
+                <button type="button" class="btn-close-alert" onclick="this.parentElement.remove()">
+                    <i class="fas fa-times"></i>
+                </button>
             </div>
-            
-            <div class="stat-card">
-                <div class="stat-icon yellow">
-                    <i class="fas fa-euro-sign"></i>
-                </div>
-                <div class="stat-value">
-                    <fmt:formatNumber value="${totalSpent}" pattern="#,##0" /> €
-                </div>
-                <div class="stat-label">Total Dépensé</div>
-            </div>
-            
-            <div class="stat-card">
-                <div class="stat-icon purple">
-                    <i class="fas fa-star"></i>
-                </div>
-                <div class="stat-value">
-                    ${favoriteType != null ? favoriteType : 'N/A'}
-                </div>
-                <div class="stat-label">Type Préféré</div>
-            </div>
-        </div>
-
-        <!-- Recent Reservations Section -->
-        <div class="dashboard-section">
-            <div class="section-header">
-                <h3 class="section-title">
-                    <i class="fas fa-ticket-alt"></i> Mes Réservations Récentes
-                </h3>
-                <a href="${pageContext.request.contextPath}/reservation/list" class="btn btn-highlight btn-sm">
-                    <i class="fas fa-list"></i> Voir tout
-                </a>
-            </div>
-            
-            <c:choose>
-                <c:when test="${not empty recentReservations}">
-                    <c:forEach items="${recentReservations}" var="r">
-                        <div class="reservation-item">
-                            <div style="display: flex; justify-content: space-between; align-items: center; gap: 1.5rem;">
-                                <!-- Left Section: Icon + Info -->
-                                <div style="display: flex; align-items: center; gap: 1rem; flex: 1;">
-                                    <div class="reservation-icon 
-                                        <c:choose>
-                                            <c:when test="${r.type == 'FLIGHT'}">flight</c:when>
-                                            <c:when test="${r.type == 'HOTEL'}">hotel</c:when>
-                                            <c:when test="${r.type == 'CIRCUIT'}">circuit</c:when>
-                                        </c:choose>">
-                                        <c:choose>
-                                            <c:when test="${r.type == 'FLIGHT'}">
-                                                <i class="fas fa-plane"></i>
-                                            </c:when>
-                                            <c:when test="${r.type == 'HOTEL'}">
-                                                <i class="fas fa-hotel"></i>
-                                            </c:when>
-                                            <c:when test="${r.type == 'CIRCUIT'}">
-                                                <i class="fas fa-route"></i>
-                                            </c:when>
-                                        </c:choose>
-                                    </div>
-                                    
-                                    <div>
-                                        <h5 class="reservation-title">
-                                            Réservation #${r.id}
-                                        </h5>
-                                        <div class="reservation-meta">
-                                            <span>
-                                                <i class="fas fa-calendar-alt"></i>
-                                                ${r.createdAt.toString().substring(0, 10)}
-                                            </span>
-                                            <span>
-                                                <i class="fas fa-users"></i>
-                                                ${r.numberOfPeople} personne(s)
-                                            </span>
-                                        </div>
-                                    </div>
+        </c:if>
+        
+        <div class="row">
+            <div class="col-md-8 mx-auto">
+                <!-- Edit Form Card -->
+                <div class="edit-form-card">
+                    <form action="${pageContext.request.contextPath}/user/update-profile" method="POST" id="editProfileForm">
+                        <!-- Personal Information Section -->
+                        <div class="form-section">
+                            <h3 class="section-title">
+                                <i class="fas fa-user"></i> Informations personnelles
+                            </h3>
+                            
+                            <div class="form-grid">
+                                <!-- First Name -->
+                                <div class="form-group">
+                                    <label for="firstName" class="form-label">
+                                        <i class="fas fa-user"></i>
+                                        Prénom
+                                        <span class="required">*</span>
+                                    </label>
+                                    <input type="text" 
+                                           class="form-control" 
+                                           id="firstName" 
+                                           name="firstName" 
+                                           value="${user.firstName}"
+                                           required
+                                           minlength="2"
+                                           maxlength="50"
+                                           placeholder="Votre prénom">
+                                    <small class="form-help">
+                                        <i class="fas fa-info-circle"></i>
+                                        2 à 50 caractères
+                                    </small>
                                 </div>
                                 
-                                <!-- Right Section: Status + Price -->
-                                <div style="text-align: right;">
-                                    <div style="margin-bottom: 0.75rem;">
-                                        <span class="status-badge 
-                                            <c:choose>
-                                                <c:when test="${r.status == 'CONFIRMEE'}">confirmed</c:when>
-                                                <c:when test="${r.status == 'EN_ATTENTE'}">pending</c:when>
-                                                <c:otherwise>cancelled</c:otherwise>
-                                            </c:choose>">
-                                            <c:choose>
-                                                <c:when test="${r.status == 'CONFIRMEE'}">
-                                                    <i class="fas fa-check-circle"></i>
-                                                </c:when>
-                                                <c:when test="${r.status == 'EN_ATTENTE'}">
-                                                    <i class="fas fa-clock"></i>
-                                                </c:when>
-                                                <c:otherwise>
-                                                    <i class="fas fa-times-circle"></i>
-                                                </c:otherwise>
-                                            </c:choose>
-                                            ${r.status}
-                                        </span>
-                                    </div>
-                                    <c:if test="${r.payment != null}">
-                                        <div class="reservation-price">
-                                            <fmt:formatNumber value="${r.payment.amount}" pattern="#,##0.00" /> €
-                                        </div>
-                                    </c:if>
+                                <!-- Last Name -->
+                                <div class="form-group">
+                                    <label for="lastName" class="form-label">
+                                        <i class="fas fa-user"></i>
+                                        Nom
+                                        <span class="required">*</span>
+                                    </label>
+                                    <input type="text" 
+                                           class="form-control" 
+                                           id="lastName" 
+                                           name="lastName" 
+                                           value="${user.lastName}"
+                                           required
+                                           minlength="2"
+                                           maxlength="50"
+                                           placeholder="Votre nom">
+                                    <small class="form-help">
+                                        <i class="fas fa-info-circle"></i>
+                                        2 à 50 caractères
+                                    </small>
                                 </div>
                             </div>
                         </div>
-                    </c:forEach>
-                </c:when>
-                <c:otherwise>
-                    <div class="empty-state-dashboard">
-                        <div class="empty-icon">
-                            <i class="fas fa-inbox"></i>
+                        
+                        <!-- Contact Information Section -->
+                        <div class="form-section">
+                            <h3 class="section-title">
+                                <i class="fas fa-address-book"></i> Coordonnées
+                            </h3>
+                            
+                            <div class="info-box">
+                                <i class="fas fa-lock"></i>
+                                <div class="info-box-content">
+                                    <strong>Email protégé</strong>
+                                    <p>Votre adresse email ne peut pas être modifiée ici. Contactez le support si nécessaire.</p>
+                                </div>
+                            </div>
+                            
+                            <div class="form-grid">
+                                <!-- Email (Read-only) -->
+                                <div class="form-group form-grid-full">
+                                    <label for="email" class="form-label">
+                                        <i class="fas fa-envelope"></i>
+                                        Email
+                                    </label>
+                                    <input type="email" 
+                                           class="form-control" 
+                                           id="email" 
+                                           value="${user.email}"
+                                           disabled>
+                                    <small class="form-help">
+                                        <i class="fas fa-lock"></i>
+                                        Adresse email non modifiable
+                                    </small>
+                                </div>
+                                
+                                <!-- Phone -->
+                                <div class="form-group">
+                                    <label for="phone" class="form-label">
+                                        <i class="fas fa-phone"></i>
+                                        Téléphone
+                                    </label>
+                                    <input type="tel" 
+                                           class="form-control" 
+                                           id="phone" 
+                                           name="phone" 
+                                           value="${user.phone}"
+                                           maxlength="20"
+                                           placeholder="Ex: +33 6 12 34 56 78">
+                                    <small class="form-help">
+                                        <i class="fas fa-info-circle"></i>
+                                        Optionnel
+                                    </small>
+                                </div>
+                                
+                                <!-- Address -->
+                                <div class="form-group form-grid-full">
+                                    <label for="address" class="form-label">
+                                        <i class="fas fa-map-marker-alt"></i>
+                                        Adresse
+                                    </label>
+                                    <input type="text" 
+                                           class="form-control" 
+                                           id="address" 
+                                           name="address" 
+                                           value="${user.address}"
+                                           maxlength="255"
+                                           placeholder="Votre adresse complète">
+                                    <small class="form-help">
+                                        <i class="fas fa-info-circle"></i>
+                                        Optionnel - Utile pour vos réservations
+                                    </small>
+                                </div>
+                            </div>
                         </div>
-                        <h4>Aucune réservation</h4>
-                        <p>Commencez votre aventure maintenant !</p>
-                        <a href="${pageContext.request.contextPath}/search/flights" class="btn btn-highlight">
-                            <i class="fas fa-search"></i> Commencer à rechercher
-                        </a>
-                    </div>
-                </c:otherwise>
-            </c:choose>
-        </div>
-
-        <!-- Recommendations Section -->
-        <div class="dashboard-section">
-            <h3 class="section-title">
-                <i class="fas fa-sparkles"></i> Recommandations pour vous
-            </h3>
-            <div class="recommendations-grid">
-                <!-- Flights Card -->
-                <div class="recommendation-card">
-                    <div class="recommendation-image flights">
-                        <i class="fas fa-plane-departure"></i>
-                    </div>
-                    <div class="recommendation-content">
-                        <h5 class="recommendation-title">Vols dernière minute</h5>
-                        <p class="recommendation-description">
-                            Offres exceptionnelles vers les destinations les plus prisées
-                        </p>
-                        <div class="recommendation-price">
-                            <i class="fas fa-tag"></i> À partir de 99€
+                        
+                        <!-- Security Note -->
+                        <div class="info-box" style="background: #fef3c7; border-color: #fde68a;">
+                            <i class="fas fa-shield-alt" style="color: #a16207;"></i>
+                            <div class="info-box-content">
+                                <strong style="color: #92400e;">Changer votre mot de passe ?</strong>
+                                <p style="color: #92400e;">
+                                    Pour modifier votre mot de passe, rendez-vous sur la 
+                                    <a href="${pageContext.request.contextPath}/user/change-password" 
+                                       style="color: #92400e; text-decoration: underline; font-weight: 600;">
+                                        page de changement de mot de passe
+                                    </a>.
+                                </p>
+                            </div>
                         </div>
-                        <a href="${pageContext.request.contextPath}/search/flights" class="btn btn-highlight btn-block">
-                            <i class="fas fa-search"></i> Découvrir
-                        </a>
-                    </div>
+                        
+                        <!-- Form Actions -->
+                        <div class="form-actions">
+                            <button type="submit" class="btn btn-highlight">
+                                <i class="fas fa-save"></i> Enregistrer les modifications
+                            </button>
+                            <a href="${pageContext.request.contextPath}/user/profile" class="btn btn-cancel">
+                                <i class="fas fa-times"></i> Annuler
+                            </a>
+                        </div>
+                    </form>
                 </div>
-                
-                <!-- Hotels Card -->
-                <div class="recommendation-card">
-                    <div class="recommendation-image hotels">
-                        <i class="fas fa-hotel"></i>
-                    </div>
-                    <div class="recommendation-content">
-                        <h5 class="recommendation-title">Hôtels de luxe</h5>
-                        <p class="recommendation-description">
-                            Réductions jusqu'à -30% sur nos plus beaux établissements
-                        </p>
-                        <div class="recommendation-price">
-                            <i class="fas fa-tag"></i> À partir de 150€/nuit
-                        </div>
-                        <a href="${pageContext.request.contextPath}/search/hotels" class="btn btn-highlight btn-block">
-                            <i class="fas fa-search"></i> Découvrir
-                        </a>
-                    </div>
-                </div>
-                
-                <!-- Circuits Card -->
-                <div class="recommendation-card">
-                    <div class="recommendation-image circuits">
-                        <i class="fas fa-map-marked-alt"></i>
-                    </div>
-                    <div class="recommendation-content">
-                        <h5 class="recommendation-title">Circuits organisés</h5>
-                        <p class="recommendation-description">
-                            Aventures tout compris vers des destinations uniques
-                        </p>
-                        <div class="recommendation-price">
-                            <i class="fas fa-tag"></i> À partir de 890€
-                        </div>
-                        <a href="${pageContext.request.contextPath}/search/circuits" class="btn btn-highlight btn-block">
-                            <i class="fas fa-search"></i> Découvrir
-                        </a>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <!-- Quick Actions Section -->
-        <div class="dashboard-section">
-            <h3 class="section-title">
-                <i class="fas fa-bolt"></i> Actions Rapides
-            </h3>
-            <div class="quick-actions-grid">
-                <a href="${pageContext.request.contextPath}/search/flights" class="btn btn-highlight btn-block">
-                    <i class="fas fa-plane"></i> Rechercher un Vol
-                </a>
-                <a href="${pageContext.request.contextPath}/search/hotels" class="btn btn-highlight btn-block">
-                    <i class="fas fa-hotel"></i> Trouver un Hôtel
-                </a>
-                <a href="${pageContext.request.contextPath}/search/circuits" class="btn btn-highlight btn-block">
-                    <i class="fas fa-route"></i> Explorer les Circuits
-                </a>
-                <a href="${pageContext.request.contextPath}/reservation/list" class="btn btn-outline-primary btn-block">
-                    <i class="fas fa-list"></i> Mes Réservations
-                </a>
             </div>
         </div>
     </div>
-      <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-   
+    
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        // Form Validation
+        document.getElementById('editProfileForm').addEventListener('submit', function(e) {
+            const firstName = document.getElementById('firstName').value.trim();
+            const lastName = document.getElementById('lastName').value.trim();
+            
+            if (firstName.length < 2 || firstName.length > 50) {
+                e.preventDefault();
+                alert('Le prénom doit contenir entre 2 et 50 caractères');
+                document.getElementById('firstName').focus();
+                return false;
+            }
+            
+            if (lastName.length < 2 || lastName.length > 50) {
+                e.preventDefault();
+                alert('Le nom doit contenir entre 2 et 50 caractères');
+                document.getElementById('lastName').focus();
+                return false;
+            }
+            
+            return true;
+        });
+        
+        // Auto-hide alerts after 5 seconds
+        setTimeout(function() {
+            const alerts = document.querySelectorAll('.alert');
+            alerts.forEach(function(alert) {
+                alert.style.transition = 'opacity 0.5s ease';
+                alert.style.opacity = '0';
+                setTimeout(function() {
+                    alert.remove();
+                }, 500);
+            });
+        }, 5000);
+    </script>
 </body>
 </html>
