@@ -224,8 +224,8 @@ COMMIT (ou ROLLBACK si erreur)
 - ✅ Recherche (`flights.jsp`, `hotels.jsp`, `circuits.jsp`)
 - ✅ Détail offre (intégré dans recherche)
 - ✅ Réservation (`form.jsp`, `success.jsp`)
-- ✅ Dashboard USER (`dashboard.jsp`) - ✨ **AMÉLIORÉ**
-- ✅ Dashboard ADMIN (`dashboard-new.jsp`) - ✨ **NOUVEAU**
+- ✅ Dashboard USER (`user\dashboard.jsp`) - ✨ **AMÉLIORÉ**
+- ✅ Dashboard ADMIN (`admin\dashboard.jsp`) - ✨ **NOUVEAU**
 - ✅ Login/Register (`login.jsp`, `register.jsp`)
 
 **CSS Moderne :**

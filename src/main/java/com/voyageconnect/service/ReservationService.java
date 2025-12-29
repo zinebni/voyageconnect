@@ -1,17 +1,32 @@
 package com.voyageconnect.service;
 
-import com.voyageconnect.dao.*;
-import com.voyageconnect.exception.BusinessException;
-import com.voyageconnect.model.*;
-import com.voyageconnect.util.EmailUtil;
-import com.voyageconnect.util.JPAUtil;
-import com.voyageconnect.util.ValidationUtil;
-
-import javax.persistence.EntityManager;
-import javax.persistence.EntityTransaction;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.List;
+
+import javax.persistence.EntityManager;
+import javax.persistence.EntityTransaction;
+
+import com.voyageconnect.dao.CircuitDAO;
+import com.voyageconnect.dao.FlightDAO;
+import com.voyageconnect.dao.HotelDAO;
+import com.voyageconnect.dao.PaymentDAO;
+import com.voyageconnect.dao.ReservationDAO;
+import com.voyageconnect.dao.UserDAO;
+import com.voyageconnect.exception.BusinessException;
+import com.voyageconnect.model.Circuit;
+import com.voyageconnect.model.Flight;
+import com.voyageconnect.model.Hotel;
+import com.voyageconnect.model.Payment;
+import com.voyageconnect.model.PaymentMethod;
+import com.voyageconnect.model.PaymentStatus;
+import com.voyageconnect.model.Reservation;
+import com.voyageconnect.model.ReservationStatus;
+import com.voyageconnect.model.ReservationType;
+import com.voyageconnect.model.User;
+import com.voyageconnect.util.EmailUtil;
+import com.voyageconnect.util.JPAUtil;
+import com.voyageconnect.util.ValidationUtil;
 
 /**
  * Service pour la gestion des réservations
@@ -362,6 +377,33 @@ public class ReservationService {
             JPAUtil.closeEntityManager(em);
         }
     }
+
+     /**
+     * FIX Récupèration une réservation par ID (details)
+     */
+    public Reservation getReservationWithDetails(Long reservationId) {
+        EntityManager em = JPAUtil.getEntityManager();
+        try {
+            return em.createQuery(
+                "SELECT r FROM Reservation r " +
+                "LEFT JOIN FETCH r.user " +
+                "LEFT JOIN FETCH r.payment " +
+                "LEFT JOIN FETCH r.flight f " +
+                "LEFT JOIN FETCH f.destination " +
+                "LEFT JOIN FETCH r.hotel h " +
+                "LEFT JOIN FETCH h.destination " +
+                "LEFT JOIN FETCH r.circuit c " +
+                "LEFT JOIN FETCH c.destination " +
+                "WHERE r.id = :id",
+                Reservation.class
+            )
+            .setParameter("id", reservationId)
+            .getSingleResult();
+        } finally {
+            JPAUtil.closeEntityManager(em);
+        }
+    }
+
 
     /**
      * Simulation du traitement du paiement

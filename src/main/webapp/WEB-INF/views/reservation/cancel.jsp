@@ -39,7 +39,7 @@
         }
         
         body {
-             font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
             background: var(--vc-bg);
             color: var(--vc-text);
             line-height: 1.6;
@@ -569,6 +569,7 @@ body.mobile-menu-open {
 
         /* Reservation Card */
         .reservation-card {
+            margin-top: 4rem;
             background: var(--vc-bg-light);
             border-radius: var(--radius-xl);
             box-shadow: var(--shadow-md);
@@ -577,7 +578,7 @@ body.mobile-menu-open {
         }
 
         .card-header {
-            background: var(--gradient-primary);
+            background: var(--vc-danger);
             padding: 2rem;
             color: #ffffff;
         }
@@ -737,7 +738,7 @@ body.mobile-menu-open {
         /* Action Buttons */
         .action-buttons {
             display: flex;
-            gap: 1rem;
+            gap: 40rem;
             margin-top: 2rem;
             padding-top: 2rem;
             border-top: 3px solid var(--vc-border);
@@ -829,6 +830,7 @@ body.mobile-menu-open {
 
             .action-buttons {
                 flex-direction: column;
+                gap: 1rem;
             }
 
             .btn {
@@ -850,18 +852,9 @@ body.mobile-menu-open {
 <body class="page-wrapper">
     <jsp:include page="/WEB-INF/views/common/navbar.jsp" />
     
-    <!-- Page Header -->
-    <div class="page-header">
-        <div class="container">
-            <h1>
-                <i class="fas fa-file-invoice"></i> Détails de la Réservation
-            </h1>
-            <p class="subtitle">Consultez les informations détaillées de votre réservation</p>
-        </div>
-    </div>
+    
     
     <div class="container">
-       
 
         <c:if test="${not empty error}">
             <div class="alert alert-warning">
@@ -878,26 +871,6 @@ body.mobile-menu-open {
                     <div class="reservation-number">
                         <i class="fas fa-ticket-alt"></i>
                         ${reservation.reservationNumber}
-                    </div>
-                    <div class="reservation-meta">
-                        <div class="meta-item">
-                            <i class="fas fa-calendar-alt"></i>
-                            <span>Créée le ${reservation.createdAtFormatted != null ? reservation.createdAtFormatted : 'N/A'}</span>
-                        </div>
-                        
-                        <div class="meta-item">
-                            <i class="fas fa-info-circle"></i>
-                            <span>Status: 
-                                <span class="status-badge status-${reservation.status}">
-                                    <c:choose>
-                                        <c:when test="${reservation.status == 'EN_ATTENTE'}">En Attente</c:when>
-                                        <c:when test="${reservation.status == 'CONFIRMEE'}">Confirmée</c:when>
-                                        <c:when test="${reservation.status == 'ANNULEE'}">Annulée</c:when>
-                                        <c:otherwise>${reservation.status}</c:otherwise>
-                                    </c:choose>
-                                </span>
-                            </span>
-                        </div>
                     </div>
                 </div>
 
@@ -1166,28 +1139,22 @@ body.mobile-menu-open {
                     <!-- Action Buttons -->
                     <div class="action-buttons">
                         <a href="${pageContext.request.contextPath}/reservation/list" class="btn btn-outline">
-                            <i class="fas fa-list"></i> Retour à la liste
+                            <i class="fas fa-list"></i> Anuler
                         </a>
                         
                         <c:if test="${reservation.status == 'EN_ATTENTE' || reservation.status == 'CONFIRMEE'}">
-                            <a href="${pageContext.request.contextPath}/reservation/cancel?id=${reservation.id}" 
-                               class="btn btn-danger">
-                                <i class="fas fa-times-circle"></i> Annuler la réservation
-                            </a>
+                            <form action="${pageContext.request.contextPath}/reservation/cancel" method="post">
+                                <input type="hidden" name="reservationId" value="${reservation.id}">
+                                <button type="submit" class="btn btn-danger">
+                                    <i class="fas fa-times-circle"></i> Confirmer l'annulation
+                                </button>
+                            </form>
                         </c:if>
 
-                        <a href="#" onclick="window.print(); return false;" class="btn btn-primary">
-                            <i class="fas fa-print"></i> Imprimer
-                        </a>
+                        
                     </div>
 
-                    <!-- Info Alert -->
-                    <c:if test="${reservation.status == 'EN_ATTENTE'}">
-                        <div class="alert alert-info" style="margin-top: 2rem;">
-                            <i class="fas fa-info-circle"></i>
-                            <span>Votre réservation est en attente de confirmation de paiement. Une fois le paiement validé, vous recevrez un email de confirmation.</span>
-                        </div>
-                    </c:if>
+        
                 </div>
             </div>
         </c:if>

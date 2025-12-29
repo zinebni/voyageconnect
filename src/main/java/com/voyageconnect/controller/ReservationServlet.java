@@ -92,7 +92,8 @@ public class ReservationServlet extends HttpServlet {
                .forward(request, response);
     }
 
-    private void viewReservation(HttpServletRequest request, HttpServletResponse response)
+    
+/*     private void viewReservation(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
 
         try {
@@ -105,6 +106,51 @@ public class ReservationServlet extends HttpServlet {
 
         } catch (Exception e) {
             response.sendRedirect(request.getContextPath() + "/reservation/list");
+        }
+    } */
+
+
+    //FIX viewReservation method:
+    private void viewReservation(HttpServletRequest request, HttpServletResponse response)
+        throws ServletException, IOException {
+
+        try {
+            Long id = Long.parseLong(request.getParameter("id"));
+
+            // ⚠️ méthode AVEC fetch joins
+            Reservation reservation = reservationService.getReservationWithDetails(id);
+
+            if (reservation == null) {
+                request.setAttribute("error", "Réservation introuvable");
+            } else {
+                DateTimeFormatter fmt = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm");
+
+                if (reservation.getCreatedAt() != null) {
+                    reservation.setCreatedAtFormatted(
+                            reservation.getCreatedAt().format(fmt)
+                    );
+                }
+
+                if (reservation.getFlight() != null) {
+                    if (reservation.getFlight().getDepartureDate() != null)
+                        reservation.getFlight().setDepartureDateFormatted(
+                                reservation.getFlight().getDepartureDate().format(fmt)
+                        );
+
+                    if (reservation.getFlight().getArrivalDate() != null)
+                        reservation.getFlight().setArrivalDateFormatted(
+                                reservation.getFlight().getArrivalDate().format(fmt)
+                        );
+                }
+            }
+
+            request.setAttribute("reservation", reservation);
+            request.getRequestDispatcher("/WEB-INF/views/reservation/view.jsp")
+                .forward(request, response);
+
+        } catch (Exception e) {
+            e.printStackTrace(); // ⚠️ IMPORTANT
+            response.sendRedirect(request.getContextPath() + "/reservation/list?error=1");
         }
     }
 
