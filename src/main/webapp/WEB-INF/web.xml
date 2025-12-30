@@ -154,6 +154,16 @@
         <url-pattern>/admin/dashboard</url-pattern>
     </servlet-mapping>
 
+    <!-- Servlet Admin Reservation View (détails et gestion) -->
+    <servlet>
+        <servlet-name>AdminReservationViewServlet</servlet-name>
+        <servlet-class>com.voyageconnect.controller.AdminReservationViewServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>AdminReservationViewServlet</servlet-name>
+        <url-pattern>/admin/reservation/view</url-pattern>
+    </servlet-mapping>
+
     <!-- Servlet paiement -->
     <servlet>
         <servlet-name>PaymentServlet</servlet-name>

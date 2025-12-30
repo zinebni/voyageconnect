@@ -23,10 +23,12 @@ import com.voyageconnect.dao.ReservationDAO;
 import com.voyageconnect.dao.UserDAO;
 import com.voyageconnect.model.Reservation;
 import com.voyageconnect.model.ReservationStatus;
+import com.voyageconnect.service.AdminService;
 import com.voyageconnect.util.JPAUtil;
 
 /**
  * Servlet pour le tableau de bord administrateur avec statistiques globales
+ * et gestion des réservations (confirmation/annulation)
  */
 public class AdminDashboardServlet extends HttpServlet {
 
@@ -38,6 +40,7 @@ public class AdminDashboardServlet extends HttpServlet {
     private final CircuitDAO circuitDAO = new CircuitDAO();
     private final UserDAO userDAO = new UserDAO();
     private final DestinationDAO destinationDAO = new DestinationDAO();
+    private final AdminService adminService = new AdminService();
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
@@ -147,5 +150,60 @@ public class AdminDashboardServlet extends HttpServlet {
                 em.close();
             }
         }
+    }
+
+    @Override
+    protected void doPost(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
+        
+        String action = request.getParameter("action");
+        String reservationIdStr = request.getParameter("reservationId");
+        
+        if (action == null || reservationIdStr == null) {
+            request.getSession().setAttribute("error", "Paramètres manquants");
+            response.sendRedirect(request.getContextPath() + "/admin/dashboard");
+            return;
+        }
+        
+        try {
+            Long reservationId = Long.parseLong(reservationIdStr);
+            boolean emailSent = false;
+            String message = "";
+            
+            switch (action) {
+                case "confirm":
+                    emailSent = adminService.confirmReservation(reservationId);
+                    if (emailSent) {
+                        message = "Réservation confirmée avec succès ! Email de confirmation envoyé au client.";
+                    } else {
+                        message = "Réservation confirmée, mais l'envoi de l'email a échoué.";
+                    }
+                    request.getSession().setAttribute("success", message);
+                    break;
+                    
+                case "cancel":
+                    emailSent = adminService.cancelReservation(reservationId);
+                    if (emailSent) {
+                        message = "Réservation annulée avec succès ! Email d'annulation envoyé au client.";
+                    } else {
+                        message = "Réservation annulée, mais l'envoi de l'email a échoué.";
+                    }
+                    request.getSession().setAttribute("success", message);
+                    break;
+                    
+                default:
+                    request.getSession().setAttribute("error", "Action non reconnue");
+            }
+            
+            LOGGER.info("Action " + action + " effectuée sur la réservation " + reservationId + " - Email envoyé: " + emailSent);
+            
+        } catch (NumberFormatException e) {
+            request.getSession().setAttribute("error", "ID de réservation invalide");
+        } catch (Exception e) {
+            LOGGER.severe("Erreur lors de l'action sur la réservation: " + e.getMessage());
+            request.getSession().setAttribute("error", "Erreur: " + e.getMessage());
+        }
+        
+        response.sendRedirect(request.getContextPath() + "/admin/dashboard");
     }
 }
