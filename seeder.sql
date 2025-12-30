@@ -24,20 +24,50 @@ SET FOREIGN_KEY_CHECKS = 1;
 -- ================================================================
 -- TABLE: users
 -- ================================================================
-INSERT INTO users (firstName, lastName, email, password, phone, address, role, active) VALUES
+INSERT INTO users
+(firstName, lastName, email, password, phone, address, role, active, created_at, updated_at)
+VALUES
 -- Administrateurs
-('Admin', 'System', 'admin@voyageconnect.com', '$2a$10$N9qo8uLOickgx2ZMRZoMyeIjZAgcfl7p92ldGxad68LJZdL17lhWy', '+212600000001', '123 Avenue Mohammed V, Casablanca', 'ADMIN', TRUE),
-('Sarah', 'Admin', 'sarah.admin@voyageconnect.com', '$2a$10$N9qo8uLOickgx2ZMRZoMyeIjZAgcfl7p92ldGxad68LJZdL17lhWy', '+212600000002', '456 Rue Hassan II, Rabat', 'ADMIN', TRUE),
+('Admin', 'System', 'admin@voyageconnect.com',
+ '$2a$10$N9qo8uLOickgx2ZMRZoMyeIjZAgcfl7p92ldGxad68LJZdL17lhWy',
+ '+212600000001', '123 Avenue Mohammed V, Casablanca', 'ADMIN', TRUE, NOW(), NOW()),
+
+('Sarah', 'Admin', 'sarah.admin@voyageconnect.com',
+ '$2a$10$N9qo8uLOickgx2ZMRZoMyeIjZAgcfl7p92ldGxad68LJZdL17lhWy',
+ '+212600000002', '456 Rue Hassan II, Rabat', 'ADMIN', TRUE, NOW(), NOW()),
 
 -- Utilisateurs réguliers
-('Ahmed', 'Bennani', 'ahmed.bennani@gmail.com', '$2a$10$N9qo8uLOickgx2ZMRZoMyeIjZAgcfl7p92ldGxad68LJZdL17lhWy', '+212661234567', '789 Boulevard Zerktouni, Casablanca', 'USER', TRUE),
-('Fatima', 'Zahra', 'fatima.zahra@gmail.com', '$2a$10$N9qo8uLOickgx2ZMRZoMyeIjZAgcfl7p92ldGxad68LJZdL17lhWy', '+212662345678', '321 Avenue Mohammed VI, Marrakech', 'USER', TRUE),
-('Youssef', 'Idrissi', 'youssef.idrissi@gmail.com', '$2a$10$N9qo8uLOickgx2ZMRZoMyeIjZAgcfl7p92ldGxad68LJZdL17lhWy', '+212663456789', '654 Rue Agadir, Agadir', 'USER', TRUE),
-('Meriem', 'Alami', 'meriem.alami@hotmail.com', '$2a$10$N9qo8uLOickgx2ZMRZoMyeIjZAgcfl7p92ldGxad68LJZdL17lhWy', '+212664567890', '987 Avenue Moulay Youssef, Tanger', 'USER', TRUE),
-('Karim', 'Tazi', 'karim.tazi@yahoo.com', '$2a$10$N9qo8uLOickgx2ZMRZoMyeIjZAgcfl7p92ldGxad68LJZdL17lhWy', '+212665678901', '147 Rue Ibn Sina, Fès', 'USER', TRUE),
-('Amal', 'Berrada', 'amal.berrada@gmail.com', '$2a$10$N9qo8uLOickgx2ZMRZoMyeIjZAgcfl7p92ldGxad68LJZdL17lhWy', '+212666789012', '258 Avenue Atlas, Meknès', 'USER', TRUE),
-('Omar', 'Fassi', 'omar.fassi@gmail.com', '$2a$10$N9qo8uLOickgx2ZMRZoMyeIjZAgcfl7p92ldGxad68LJZdL17lhWy', '+212667890123', '369 Boulevard Hassan II, Oujda', 'USER', TRUE),
-('Zineb', 'Amrani', 'zineb.amrani@outlook.com', '$2a$10$N9qo8uLOickgx2ZMRZoMyeIjZAgcfl7p92ldGxad68LJZdL17lhWy', '+212668901234', '741 Rue Moulay Ismail, Kenitra', 'USER', TRUE);
+('Ahmed', 'Bennani', 'ahmed.bennani@gmail.com',
+ '$2a$10$N9qo8uLOickgx2ZMRZoMyeIjZAgcfl7p92ldGxad68LJZdL17lhWy',
+ '+212661234567', '789 Boulevard Zerktouni, Casablanca', 'USER', TRUE, NOW(), NOW()),
+
+('Fatima', 'Zahra', 'fatima.zahra@gmail.com',
+ '$2a$10$N9qo8uLOickgx2ZMRZoMyeIjZAgcfl7p92ldGxad68LJZdL17lhWy',
+ '+212662345678', '321 Avenue Mohammed VI, Marrakech', 'USER', TRUE, NOW(), NOW()),
+
+('Youssef', 'Idrissi', 'youssef.idrissi@gmail.com',
+ '$2a$10$N9qo8uLOickgx2ZMRZoMyeIjZAgcfl7p92ldGxad68LJZdL17lhWy',
+ '+212663456789', '654 Rue Agadir, Agadir', 'USER', TRUE, NOW(), NOW()),
+
+('Meriem', 'Alami', 'meriem.alami@hotmail.com',
+ '$2a$10$N9qo8uLOickgx2ZMRZoMyeIjZAgcfl7p92ldGxad68LJZdL17lhWy',
+ '+212664567890', '987 Avenue Moulay Youssef, Tanger', 'USER', TRUE, NOW(), NOW()),
+
+('Karim', 'Tazi', 'karim.tazi@yahoo.com',
+ '$2a$10$N9qo8uLOickgx2ZMRZoMyeIjZAgcfl7p92ldGxad68LJZdL17lhWy',
+ '+212665678901', '147 Rue Ibn Sina, Fès', 'USER', TRUE, NOW(), NOW()),
+
+('Amal', 'Berrada', 'amal.berrada@gmail.com',
+ '$2a$10$N9qo8uLOickgx2ZMRZoMyeIjZAgcfl7p92ldGxad68LJZdL17lhWy',
+ '+212666789012', '258 Avenue Atlas, Meknès', 'USER', TRUE, NOW(), NOW()),
+
+('Omar', 'Fassi', 'omar.fassi@gmail.com',
+ '$2a$10$N9qo8uLOickgx2ZMRZoMyeIjZAgcfl7p92ldGxad68LJZdL17lhWy',
+ '+212667890123', '369 Boulevard Hassan II, Oujda', 'USER', TRUE, NOW(), NOW()),
+
+('Zineb', 'Amrani', 'zineb.amrani@outlook.com',
+ '$2a$10$N9qo8uLOickgx2ZMRZoMyeIjZAgcfl7p92ldGxad68LJZdL17lhWy',
+ '+212668901234', '741 Rue Moulay Ismail, Kenitra', 'USER', TRUE, NOW(), NOW());
 
 -- Mot de passe par défaut pour tous les utilisateurs: "Password123!"
 

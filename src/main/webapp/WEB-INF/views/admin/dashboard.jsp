@@ -879,6 +879,78 @@ nav {
             color: #dc2626;
         }
         
+        /* Action Buttons for Reservation Management */
+        .btn-action {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.35rem;
+            padding: 0.5rem 0.875rem;
+            border: none;
+            border-radius: 6px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            text-decoration: none;
+        }
+        
+        .btn-action i {
+            font-size: 0.75rem;
+        }
+        
+        .btn-confirm {
+            background: linear-gradient(135deg, #00aa6c 0%, #008f5a 100%);
+            color: white;
+            box-shadow: 0 2px 4px rgba(0, 170, 108, 0.3);
+        }
+        
+        .btn-confirm:hover {
+            background: linear-gradient(135deg, #00c77d 0%, #00aa6c 100%);
+            transform: translateY(-1px);
+            box-shadow: 0 4px 8px rgba(0, 170, 108, 0.4);
+        }
+        
+        .btn-cancel {
+            background: linear-gradient(135deg, #dc3545 0%, #c82333 100%);
+            color: white;
+            box-shadow: 0 2px 4px rgba(220, 53, 69, 0.3);
+        }
+        
+        .btn-cancel:hover {
+            background: linear-gradient(135deg, #e84a59 0%, #dc3545 100%);
+            transform: translateY(-1px);
+            box-shadow: 0 4px 8px rgba(220, 53, 69, 0.4);
+        }
+        
+        /* View Details Button */
+        .btn-view-details {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.35rem;
+            padding: 0.5rem 0.875rem;
+            border: none;
+            border-radius: 6px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            text-decoration: none;
+            background: linear-gradient(135deg, #0071c2 0%, #003580 100%);
+            color: white;
+            box-shadow: 0 2px 4px rgba(0, 113, 194, 0.3);
+        }
+        
+        .btn-view-details:hover {
+            background: linear-gradient(135deg, #0088e8 0%, #0071c2 100%);
+            transform: translateY(-1px);
+            box-shadow: 0 4px 8px rgba(0, 113, 194, 0.4);
+            color: white;
+        }
+        
+        .btn-view-details i {
+            font-size: 0.85rem;
+        }
+        
         /* Quick Actions */
         .quick-actions-grid {
             display: grid;
@@ -1327,12 +1399,33 @@ nav {
             </div>
         </div>
         
-        <!-- Recent Reservations -->
+        <!-- Messages de succès/erreur -->
+        <c:if test="${not empty sessionScope.success}">
+            <div class="alert alert-success" style="background: #d4edda; color: #155724; padding: 1rem 1.5rem; border-radius: 12px; margin-bottom: 1.5rem; display: flex; align-items: center; gap: 0.75rem; border: 1px solid #c3e6cb;">
+                <i class="fas fa-check-circle" style="font-size: 1.25rem;"></i>
+                <span>${sessionScope.success}</span>
+                <button onclick="this.parentElement.remove()" style="margin-left: auto; background: none; border: none; color: #155724; cursor: pointer; font-size: 1.25rem;">&times;</button>
+            </div>
+            <c:remove var="success" scope="session"/>
+        </c:if>
+        <c:if test="${not empty sessionScope.error}">
+            <div class="alert alert-danger" style="background: #f8d7da; color: #721c24; padding: 1rem 1.5rem; border-radius: 12px; margin-bottom: 1.5rem; display: flex; align-items: center; gap: 0.75rem; border: 1px solid #f5c6cb;">
+                <i class="fas fa-exclamation-circle" style="font-size: 1.25rem;"></i>
+                <span>${sessionScope.error}</span>
+                <button onclick="this.parentElement.remove()" style="margin-left: auto; background: none; border: none; color: #721c24; cursor: pointer; font-size: 1.25rem;">&times;</button>
+            </div>
+            <c:remove var="error" scope="session"/>
+        </c:if>
+        
+        <!-- ========== GESTION DES RÉSERVATIONS ========== -->
         <div class="section-card">
             <div class="section-header">
                 <h2 class="section-title">
-                    <i class="fas fa-clock-rotate-left"></i> Dernières Réservations
+                    <i class="fas fa-tasks"></i> Gestion des Réservations
                 </h2>
+                <span style="background: #febb02; color: #1a1a1a; padding: 0.5rem 1rem; border-radius: 20px; font-weight: 600; font-size: 0.875rem;">
+                    <i class="fas fa-clock"></i> ${pendingReservations} en attente
+                </span>
             </div>
             
             <c:choose>
@@ -1341,18 +1434,20 @@ nav {
                         <table class="admin-table">
                             <thead>
                                 <tr>
-                                    <th><i class="fas fa-hashtag"></i> ID</th>
+                                    <th><i class="fas fa-hashtag"></i> N° Résa</th>
                                     <th><i class="fas fa-tag"></i> Type</th>
                                     <th><i class="fas fa-user"></i> Client</th>
-                                    <th><i class="fas fa-calendar"></i> Date</th>
+                                    <th><i class="fas fa-envelope"></i> Email</th>
+                                    <th><i class="fas fa-info"></i> Détails</th>
                                     <th><i class="fas fa-money-bill"></i> Montant</th>
-                                    <th><i class="fas fa-info-circle"></i> Statut</th>
+                                    <th><i class="fas fa-flag"></i> Statut</th>
+                                    <th><i class="fas fa-eye"></i> Voir</th>
                                 </tr>
                             </thead>
                             <tbody>
                                 <c:forEach items="${recentReservations}" var="res">
                                     <tr>
-                                        <td><span class="reservation-id">#${res.id}</span></td>
+                                        <td><span class="reservation-id">${res.reservationNumber}</span></td>
                                         <td>
                                             <c:choose>
                                                 <c:when test="${res.type == 'FLIGHT'}">
@@ -1370,32 +1465,62 @@ nav {
                                                         <i class="fas fa-route"></i> Circuit
                                                     </span>
                                                 </c:when>
+                                                <c:when test="${res.type == 'PACKAGE'}">
+                                                    <span class="type-badge" style="background: #e8d5f9; color: #9b59b6;">
+                                                        <i class="fas fa-box"></i> Package
+                                                    </span>
+                                                </c:when>
                                             </c:choose>
                                         </td>
-                                        <td>${res.user.firstName} ${res.user.lastName}</td>
-                                        <td>${res.createdAtFormatted}</td>
-                                        <td>
-                                            <c:if test="${not empty res.payment}">
-                                                <strong style="color: #00aa6c;">
-                                                    <fmt:formatNumber value="${res.payment.amount}" type="currency" currencySymbol="" maxFractionDigits="0"/> MAD
-                                                </strong>
-                                            </c:if>
+                                        <td><strong>${res.user.firstName} ${res.user.lastName}</strong></td>
+                                        <td style="font-size: 0.85rem; color: #666;">${res.user.email}</td>
+                                        <td style="font-size: 0.85rem; max-width: 200px;">
+                                            <c:choose>
+                                                <c:when test="${res.type == 'FLIGHT' and not empty res.flight}">
+                                                    ${res.flight.flightNumber} - ${res.flight.departureCity} → ${res.flight.destination.name}
+                                                </c:when>
+                                                <c:when test="${res.type == 'HOTEL' and not empty res.hotel}">
+                                                    ${res.hotel.name} (${res.hotel.stars}★)
+                                                </c:when>
+                                                <c:when test="${res.type == 'CIRCUIT' and not empty res.circuit}">
+                                                    ${res.circuit.name} - ${res.circuit.durationDays}j
+                                                </c:when>
+                                                <c:when test="${res.type == 'PACKAGE'}">
+                                                    <c:if test="${not empty res.flight}">Vol: ${res.flight.flightNumber}</c:if>
+                                                    <c:if test="${not empty res.hotel}"> + ${res.hotel.name}</c:if>
+                                                </c:when>
+                                            </c:choose>
                                         </td>
                                         <td>
-                                            <c:set var="statusClass" value="${res.status.name().toLowerCase().replace('_', '')}" />
-                                            <span class="status-badge ${statusClass}">
-                                                <c:choose>
-                                                    <c:when test="${res.status == 'CONFIRMEE'}">
+                                            <strong style="color: #00aa6c;">
+                                                <fmt:formatNumber value="${res.totalAmount}" type="currency" currencySymbol="" maxFractionDigits="0"/> MAD
+                                            </strong>
+                                        </td>
+                                        <td>
+                                            <c:choose>
+                                                <c:when test="${res.status == 'CONFIRMEE'}">
+                                                    <span class="status-badge confirmee">
                                                         <i class="fas fa-check-circle"></i> Confirmée
-                                                    </c:when>
-                                                    <c:when test="${res.status == 'EN_ATTENTE'}">
+                                                    </span>
+                                                </c:when>
+                                                <c:when test="${res.status == 'EN_ATTENTE'}">
+                                                    <span class="status-badge enattente">
                                                         <i class="fas fa-clock"></i> En attente
-                                                    </c:when>
-                                                    <c:when test="${res.status == 'ANNULEE'}">
+                                                    </span>
+                                                </c:when>
+                                                <c:when test="${res.status == 'ANNULEE'}">
+                                                    <span class="status-badge annulee">
                                                         <i class="fas fa-times-circle"></i> Annulée
-                                                    </c:when>
-                                                </c:choose>
-                                            </span>
+                                                    </span>
+                                                </c:when>
+                                            </c:choose>
+                                        </td>
+                                        <td>
+                                            <a href="${pageContext.request.contextPath}/admin/reservation/view?id=${res.id}" 
+                                               class="btn-view-details" 
+                                               title="Voir les détails et gérer la réservation">
+                                                <i class="fas fa-eye"></i> Voir détails
+                                            </a>
                                         </td>
                                     </tr>
                                 </c:forEach>
@@ -1406,7 +1531,7 @@ nav {
                 <c:otherwise>
                     <div class="empty-state">
                         <i class="fas fa-inbox"></i>
-                        <p>Aucune réservation récente</p>
+                        <p>Aucune réservation à gérer</p>
                     </div>
                 </c:otherwise>
             </c:choose>

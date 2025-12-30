@@ -3,24 +3,29 @@ package com.voyageconnect.service;
 import com.voyageconnect.dao.*;
 import com.voyageconnect.exception.BusinessException;
 import com.voyageconnect.model.*;
+import com.voyageconnect.util.EmailUtil;
 import com.voyageconnect.util.JPAUtil;
 import com.voyageconnect.util.ValidationUtil;
 
 import javax.persistence.EntityManager;
 import javax.persistence.EntityTransaction;
 import java.util.List;
+import java.util.logging.Logger;
 
 /**
- * Service d'administration (CRUD sur destinations, vols, hôtels, circuits, promotions)
+ * Service d'administration (CRUD sur destinations, vols, hôtels, circuits, promotions, réservations)
  * Réservé aux administrateurs
  */
 public class AdminService {
+
+    private static final Logger LOGGER = Logger.getLogger(AdminService.class.getName());
 
     private final DestinationDAO destinationDAO = new DestinationDAO();
     private final FlightDAO flightDAO = new FlightDAO();
     private final HotelDAO hotelDAO = new HotelDAO();
     private final CircuitDAO circuitDAO = new CircuitDAO();
     private final PromotionDAO promotionDAO = new PromotionDAO();
+    private final ReservationDAO reservationDAO = new ReservationDAO();
 
     // ========== DESTINATIONS ==========
 
@@ -320,5 +325,186 @@ public class AdminService {
         } finally {
             JPAUtil.closeEntityManager(em);
         }
+    }
+
+    // ========== RESERVATIONS ==========
+
+    /**
+     * Récupère toutes les réservations
+     */
+    public List<Reservation> getAllReservations() {
+        EntityManager em = JPAUtil.getEntityManager();
+        try {
+            return reservationDAO.findAll(em);
+        } finally {
+            JPAUtil.closeEntityManager(em);
+        }
+    }
+
+    /**
+     * Récupère une réservation par son ID
+     */
+    public Reservation getReservationById(Long id) {
+        EntityManager em = JPAUtil.getEntityManager();
+        try {
+            return reservationDAO.findById(em, id).orElse(null);
+        } finally {
+            JPAUtil.closeEntityManager(em);
+        }
+    }
+
+    /**
+     * Confirme une réservation et envoie un email de confirmation au client
+     */
+    public boolean confirmReservation(Long reservationId) throws BusinessException {
+        EntityManager em = JPAUtil.getEntityManager();
+        EntityTransaction tx = em.getTransaction();
+        try {
+            tx.begin();
+            
+            Reservation reservation = reservationDAO.findById(em, reservationId)
+                    .orElseThrow(() -> new BusinessException("Réservation non trouvée"));
+            
+            if (reservation.getStatus() == ReservationStatus.CONFIRMEE) {
+                throw new BusinessException("Cette réservation est déjà confirmée");
+            }
+            
+            reservation.setStatus(ReservationStatus.CONFIRMEE);
+            reservationDAO.update(em, reservation);
+            
+            tx.commit();
+            
+            // Envoyer l'email de confirmation
+            String userEmail = reservation.getUser().getEmail();
+            String userName = reservation.getUser().getFirstName() + " " + reservation.getUser().getLastName();
+            String reservationNumber = reservation.getReservationNumber();
+            String reservationType = reservation.getType().name();
+            String details = buildReservationDetails(reservation);
+            
+            boolean emailSent = EmailUtil.sendAdminReservationConfirmation(
+                    userEmail, userName, reservationNumber, reservationType, details);
+            
+            if (emailSent) {
+                LOGGER.info("Email de confirmation envoyé à " + userEmail + " pour la réservation " + reservationNumber);
+            } else {
+                LOGGER.warning("Échec de l'envoi de l'email de confirmation à " + userEmail);
+            }
+            
+            return emailSent;
+            
+        } catch (BusinessException e) {
+            if (tx.isActive()) tx.rollback();
+            throw e;
+        } catch (Exception e) {
+            if (tx.isActive()) tx.rollback();
+            throw new BusinessException("Erreur lors de la confirmation : " + e.getMessage(), e);
+        } finally {
+            JPAUtil.closeEntityManager(em);
+        }
+    }
+
+    /**
+     * Annule une réservation et envoie un email d'annulation au client
+     */
+    public boolean cancelReservation(Long reservationId) throws BusinessException {
+        EntityManager em = JPAUtil.getEntityManager();
+        EntityTransaction tx = em.getTransaction();
+        try {
+            tx.begin();
+            
+            Reservation reservation = reservationDAO.findById(em, reservationId)
+                    .orElseThrow(() -> new BusinessException("Réservation non trouvée"));
+            
+            if (reservation.getStatus() == ReservationStatus.ANNULEE) {
+                throw new BusinessException("Cette réservation est déjà annulée");
+            }
+            
+            reservation.setStatus(ReservationStatus.ANNULEE);
+            reservationDAO.update(em, reservation);
+            
+            tx.commit();
+            
+            // Envoyer l'email d'annulation
+            String userEmail = reservation.getUser().getEmail();
+            String userName = reservation.getUser().getFirstName() + " " + reservation.getUser().getLastName();
+            String reservationNumber = reservation.getReservationNumber();
+            String reservationType = reservation.getType().name();
+            
+            boolean emailSent = EmailUtil.sendAdminReservationCancellation(
+                    userEmail, userName, reservationNumber, reservationType);
+            
+            if (emailSent) {
+                LOGGER.info("Email d'annulation envoyé à " + userEmail + " pour la réservation " + reservationNumber);
+            } else {
+                LOGGER.warning("Échec de l'envoi de l'email d'annulation à " + userEmail);
+            }
+            
+            return emailSent;
+            
+        } catch (BusinessException e) {
+            if (tx.isActive()) tx.rollback();
+            throw e;
+        } catch (Exception e) {
+            if (tx.isActive()) tx.rollback();
+            throw new BusinessException("Erreur lors de l'annulation : " + e.getMessage(), e);
+        } finally {
+            JPAUtil.closeEntityManager(em);
+        }
+    }
+
+    /**
+     * Construit les détails de la réservation pour l'email
+     */
+    private String buildReservationDetails(Reservation reservation) {
+        StringBuilder details = new StringBuilder();
+        
+        switch (reservation.getType()) {
+            case FLIGHT:
+                if (reservation.getFlight() != null) {
+                    Flight flight = reservation.getFlight();
+                    details.append("Vol ").append(flight.getFlightNumber())
+                           .append(" - ").append(flight.getDepartureCity())
+                           .append(" → ").append(flight.getDestination() != null ? flight.getDestination().getName() : "")
+                           .append("<br>Compagnie: ").append(flight.getAirline())
+                           .append("<br>Classe: ").append(flight.getFlightClass());
+                }
+                break;
+            case HOTEL:
+                if (reservation.getHotel() != null) {
+                    Hotel hotel = reservation.getHotel();
+                    details.append("Hôtel ").append(hotel.getName())
+                           .append(" (").append(hotel.getStars()).append("★)")
+                           .append("<br>Adresse: ").append(hotel.getAddress());
+                    if (reservation.getCheckInDate() != null && reservation.getCheckOutDate() != null) {
+                        details.append("<br>Du ").append(reservation.getCheckInDate().toLocalDate())
+                               .append(" au ").append(reservation.getCheckOutDate().toLocalDate());
+                    }
+                }
+                break;
+            case CIRCUIT:
+                if (reservation.getCircuit() != null) {
+                    Circuit circuit = reservation.getCircuit();
+                    details.append("Circuit: ").append(circuit.getName())
+                           .append("<br>Durée: ").append(circuit.getDurationDays()).append(" jours")
+                           .append("<br>Destination: ").append(circuit.getDestination() != null ? circuit.getDestination().getName() : "");
+                }
+                break;
+            case PACKAGE:
+                details.append("Package voyage");
+                if (reservation.getFlight() != null) {
+                    details.append("<br>Vol: ").append(reservation.getFlight().getFlightNumber());
+                }
+                if (reservation.getHotel() != null) {
+                    details.append("<br>Hôtel: ").append(reservation.getHotel().getName());
+                }
+                break;
+            default:
+                details.append("Réservation ").append(reservation.getType());
+        }
+        
+        details.append("<br><br>Nombre de personnes: ").append(reservation.getNumberOfPeople())
+               .append("<br>Montant total: ").append(reservation.getTotalAmount()).append(" MAD");
+        
+        return details.toString();
     }
 }
