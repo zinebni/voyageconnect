@@ -593,7 +593,7 @@
         .action-buttons {
             display: flex;
             flex-wrap: wrap;
-            gap: 40rem;
+            gap: 1rem;
             align-items: center;
         }
 
@@ -1041,8 +1041,8 @@
                                     </span>
                                     <span class="detail-value">
                                         <c:choose>
-                                            <c:when test="${reservation.checkInDate != null}">
-                                                <fmt:formatDate value="${reservation.checkInDate}" pattern="dd/MM/yyyy" />
+                                            <c:when test="${reservation.checkInDateFormatted != null}">
+                                                ${reservation.checkInDateFormatted}
                                             </c:when>
                                             <c:otherwise>N/A</c:otherwise>
                                         </c:choose>
@@ -1055,8 +1055,8 @@
                                     </span>
                                     <span class="detail-value">
                                         <c:choose>
-                                            <c:when test="${reservation.checkOutDate != null}">
-                                                <fmt:formatDate value="${reservation.checkOutDate}" pattern="dd/MM/yyyy" />
+                                            <c:when test="${reservation.checkOutDateFormatted != null}">
+                                                ${reservation.checkOutDateFormatted}
                                             </c:when>
                                             <c:otherwise>N/A</c:otherwise>
                                         </c:choose>

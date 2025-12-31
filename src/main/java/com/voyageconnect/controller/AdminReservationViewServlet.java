@@ -12,6 +12,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import com.voyageconnect.dao.ReservationDAO;
 import com.voyageconnect.model.Reservation;
+import com.voyageconnect.model.ReservationType;
 import com.voyageconnect.service.AdminService;
 import com.voyageconnect.util.JPAUtil;
 
@@ -54,6 +55,22 @@ public class AdminReservationViewServlet extends HttpServlet {
             DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm");
             if (reservation.getCreatedAt() != null) {
                 reservation.setCreatedAtFormatted(reservation.getCreatedAt().format(formatter));
+            }
+
+            // Formater les dates d'hôtel si présent
+            if (reservation.getType() == ReservationType.HOTEL) {
+
+                    if (reservation.getCheckInDate() != null) {
+                        reservation.setCheckInDateFormatted(
+                            reservation.getCheckInDate().format(formatter)
+                        );
+                    }
+
+                    if (reservation.getCheckOutDate() != null) {
+                        reservation.setCheckOutDateFormatted(
+                            reservation.getCheckOutDate().format(formatter)
+                        );
+                    }
             }
             
             // Formater les dates du vol si présent

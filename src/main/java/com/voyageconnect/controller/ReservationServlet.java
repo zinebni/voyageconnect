@@ -13,6 +13,7 @@ import javax.servlet.http.HttpSession;
 
 import com.voyageconnect.model.PaymentMethod;
 import com.voyageconnect.model.Reservation;
+import com.voyageconnect.model.ReservationType;
 import com.voyageconnect.service.ReservationService;
 
 /**
@@ -129,6 +130,22 @@ public class ReservationServlet extends HttpServlet {
                     );
                 }
 
+                if (reservation.getType() == ReservationType.HOTEL) {
+
+                    if (reservation.getCheckInDate() != null) {
+                        reservation.setCheckInDateFormatted(
+                            reservation.getCheckInDate().format(fmt)
+                        );
+                    }
+
+                    if (reservation.getCheckOutDate() != null) {
+                        reservation.setCheckOutDateFormatted(
+                            reservation.getCheckOutDate().format(fmt)
+                        );
+                    }
+        }
+                       
+
                 if (reservation.getFlight() != null) {
                     if (reservation.getFlight().getDepartureDate() != null)
                         reservation.getFlight().setDepartureDateFormatted(
@@ -140,6 +157,8 @@ public class ReservationServlet extends HttpServlet {
                                 reservation.getFlight().getArrivalDate().format(fmt)
                         );
                 }
+
+                
             }
 
             request.setAttribute("reservation", reservation);

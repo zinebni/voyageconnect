@@ -89,6 +89,10 @@ public class Reservation implements Serializable {
     // Champ temporaire pour le formatage de la date dans la JSP
     @Transient
     private String createdAtFormatted;
+    @Transient
+    private String checkInDateFormatted;
+    @Transient
+    private String checkOutDateFormatted;
 
     @OneToOne(mappedBy = "reservation", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private Payment payment;
@@ -249,6 +253,22 @@ public class Reservation implements Serializable {
 
     public void setCreatedAtFormatted(String createdAtFormatted) {
         this.createdAtFormatted = createdAtFormatted;
+    }
+
+    // Getter et Setter pour checkInDateFormatted
+    public String getCheckInDateFormatted() {
+        return checkInDateFormatted;
+    }
+    public void setCheckInDateFormatted(String checkInDateFormatted) {
+        this.checkInDateFormatted = checkInDateFormatted;
+    }
+
+    // Getter et Setter pour checkOutDateFormatted
+    public String getCheckOutDateFormatted() {
+        return checkOutDateFormatted;
+    }
+    public void setCheckOutDateFormatted(String checkOutDateFormatted) {
+        this.checkOutDateFormatted = checkOutDateFormatted;
     }
     
     @Override
