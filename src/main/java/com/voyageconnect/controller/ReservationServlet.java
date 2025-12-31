@@ -4,7 +4,6 @@ import java.io.IOException;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
-import java.util.logging.Logger;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -21,7 +20,6 @@ import com.voyageconnect.service.ReservationService;
  */
 public class ReservationServlet extends HttpServlet {
 
-    private static final Logger LOGGER = Logger.getLogger(ReservationServlet.class.getName());
     private final ReservationService reservationService = new ReservationService();
 
     @Override
