@@ -6,9 +6,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Gestion des Destinations - VoyageConnect Admin</title>
+    <title>Gestion des Hôtels - VoyageConnect Admin</title>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="${pageContext.request.contextPath}/css/style.css">
     <style>
         :root {
             --vc-primary: #003580;
@@ -18,6 +18,7 @@
             --vc-text: #1a1a1a;
             --vc-text-light: #6b7280;
             --vc-border: #e5e7eb;
+            --vc-border-light: #f3f4f6;
             --vc-success: #00aa6c;
             --vc-warning: #febb02;
             --vc-danger: #dc3545;
@@ -26,20 +27,22 @@
             --radius-md: 8px;
             --radius-lg: 12px;
             --radius-xl: 16px;
-            --transition-base: 250ms cubic-bezier(0.4, 0, 0.2, 1);
+            --transition-base: 250ms ease;
             --gradient-primary: linear-gradient(135deg, #003580 0%, #0057b8 100%);
             --gradient-admin: linear-gradient(135deg, #003580 0%, #003580 100%);
         }
+
         * { margin: 0; padding: 0; box-sizing: border-box; }
+
         body {
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
             background: var(--vc-bg);
             color: var(--vc-text);
             line-height: 1.6;
         }
-        .container { max-width: 1200px; margin: 0 auto; padding: 0 1.5rem; }
 
-       /* ========== Navigation Bar ========== */
+        .container { max-width: 1200px; margin: 0 auto; padding: 0 1.5rem; }
+        /* ========== Navigation Bar ========== */
 nav {
     background: var(--vc-bg-light);
     box-shadow: var(--shadow-md);
@@ -580,168 +583,57 @@ nav {
     color: var(--vc-accent);
     background: var(--vc-border-light);
 }
-
         /* Page Header */
         .page-header {
-            background: var(--gradient-primary);
-            padding: 3rem 0;
+            background: var(--gradient-admin);
+            padding: 2.5rem 0;
             margin-bottom: 2rem;
         }
+
+        .page-header-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+
         .page-header h1 {
             color: #ffffff;
-            font-size: 2.25rem;
-            font-weight: 800;
-            display: flex;
-            align-items: center;
-            gap: 0.75rem;
-            margin-bottom: 0.5rem;
-        }
-        .page-header p {
-            color: rgba(255, 255, 255, 0.9);
-            font-size: 1.1rem;
-            margin: 0;
-        }
-        .breadcrumb-admin {
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
-            margin-top: 1rem;
-            font-size: 0.9rem;
-        }
-        .breadcrumb-admin a { color: rgba(255, 255, 255, 0.7); text-decoration: none; }
-        .breadcrumb-admin a:hover { color: #ffffff; }
-        .breadcrumb-admin span { color: rgba(255, 255, 255, 0.5); }
-
-        /* Cards */
-        .admin-card {
-            background: var(--vc-bg-light);
-            border-radius: var(--radius-xl);
-            box-shadow: var(--shadow-md);
-            margin-bottom: 2rem;
-            overflow: hidden;
-        }
-        .card-header-custom {
-            background: var(--vc-bg);
-            padding: 1.25rem 1.5rem;
-            border-bottom: 1px solid var(--vc-border);
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-        }
-        .card-title {
-            display: flex;
-            align-items: center;
-            gap: 0.75rem;
-            font-size: 1.1rem;
+            font-size: 1.75rem;
             font-weight: 700;
-            color: var(--vc-primary);
-            margin: 0;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
         }
-        .card-title i { color: var(--vc-accent); }
-        .card-body-custom { padding: 1.5rem; }
 
-        /* Form */
-        .form-label { font-weight: 600; color: var(--vc-text); margin-bottom: 0.5rem; }
-        .form-control {
-            border: 2px solid var(--vc-border);
-            border-radius: var(--radius-md);
-            padding: 0.75rem 1rem;
-            transition: all var(--transition-base);
+        .page-header .subtitle {
+            color: rgba(255, 255, 255, 0.8);
+            font-size: 0.95rem;
+            margin-top: 0.25rem;
         }
-        .form-control:focus {
-            border-color: var(--vc-accent);
-            box-shadow: 0 0 0 3px rgba(0, 113, 194, 0.1);
-        }
-        .form-text { color: var(--vc-text-light); font-size: 0.85rem; }
 
-        /* Buttons */
-        .btn-primary-custom {
-            background: var(--gradient-primary);
-            color: #ffffff;
-            border: none;
-            padding: 0.75rem 1.5rem;
-            border-radius: var(--radius-md);
-            font-weight: 600;
+        .btn-back {
             display: inline-flex;
             align-items: center;
             gap: 0.5rem;
-            cursor: pointer;
+            padding: 0.625rem 1.25rem;
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            color: #ffffff;
+            text-decoration: none;
+            border-radius: var(--radius-md);
+            font-weight: 500;
             transition: all var(--transition-base);
         }
-        .btn-primary-custom:hover {
-            transform: translateY(-2px);
-            box-shadow: var(--shadow-lg);
+
+        .btn-back:hover {
+            background: rgba(255, 255, 255, 0.2);
             color: #ffffff;
         }
-
-        /* Table */
-        .table-custom { width: 100%; border-collapse: separate; border-spacing: 0; }
-        .table-custom th {
-            background: var(--vc-bg);
-            color: var(--vc-text-light);
-            font-weight: 600;
-            font-size: 0.85rem;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-            padding: 1rem;
-            text-align: left;
-            border-bottom: 2px solid var(--vc-border);
-        }
-        .table-custom td {
-            padding: 1rem;
-            border-bottom: 1px solid var(--vc-border);
-            vertical-align: middle;
-        }
-        .table-custom tbody tr { transition: all var(--transition-base); }
-        .table-custom tbody tr:hover { background: var(--vc-bg); }
-
-        .item-name { font-weight: 700; color: var(--vc-primary); }
-        .item-badge {
-            display: inline-flex;
-            align-items: center;
-            gap: 0.5rem;
-            background: var(--vc-bg);
-            padding: 0.25rem 0.75rem;
-            border-radius: var(--radius-md);
-            font-size: 0.9rem;
-        }
-        .item-image {
-            width: 60px;
-            height: 40px;
-            object-fit: cover;
-            border-radius: var(--radius-md);
-        }
-        .item-status {
-            display: inline-flex;
-            align-items: center;
-            gap: 0.35rem;
-            padding: 0.35rem 0.75rem;
-            border-radius: 9999px;
-            font-size: 0.8rem;
-            font-weight: 600;
-        }
-        .status-active { background: rgba(0, 170, 108, 0.1); color: var(--vc-success); }
-        .status-inactive { background: rgba(220, 53, 69, 0.1); color: var(--vc-danger); }
-
-        .action-buttons { display: flex; gap: 0.5rem; }
-        .btn-action {
-            width: 36px;
-            height: 36px;
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            border: none;
-            border-radius: var(--radius-md);
-            cursor: pointer;
-            transition: all var(--transition-base);
-        }
-        .btn-edit { background: rgba(0, 113, 194, 0.1); color: var(--vc-accent); }
-        .btn-edit:hover { background: var(--vc-accent); color: #ffffff; }
-        .btn-delete { background: rgba(220, 53, 69, 0.1); color: var(--vc-danger); }
-        .btn-delete:hover { background: var(--vc-danger); color: #ffffff; }
 
         /* Alerts */
-        .alert-custom {
+        .alert {
             padding: 1rem 1.5rem;
             border-radius: var(--radius-lg);
             margin-bottom: 1.5rem;
@@ -749,22 +641,307 @@ nav {
             align-items: center;
             gap: 0.75rem;
         }
-        .alert-success-custom { background: rgba(0, 170, 108, 0.1); color: var(--vc-success); border: 1px solid rgba(0, 170, 108, 0.2); }
-        .alert-danger-custom { background: rgba(220, 53, 69, 0.1); color: var(--vc-danger); border: 1px solid rgba(220, 53, 69, 0.2); }
 
-        /* Empty State */
-        .empty-state { text-align: center; padding: 3rem; color: var(--vc-text-light); }
-        .empty-state i { font-size: 4rem; color: var(--vc-border); margin-bottom: 1rem; }
+        .alert-success { background: #d4edda; color: #155724; border: 1px solid #c3e6cb; }
+        .alert-danger { background: #f8d7da; color: #721c24; border: 1px solid #f5c6cb; }
+
+        .alert button {
+            margin-left: auto;
+            background: none;
+            border: none;
+            font-size: 1.25rem;
+            cursor: pointer;
+            opacity: 0.7;
+        }
+
+        /* Admin Cards */
+        .admin-card {
+            background: var(--vc-bg-light);
+            border-radius: var(--radius-xl);
+            box-shadow: var(--shadow-md);
+            margin-bottom: 2rem;
+            overflow: hidden;
+        }
+
+        .card-header {
+            background: var(--vc-border-light);
+            padding: 1.25rem 1.5rem;
+            border-bottom: 1px solid var(--vc-border);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .card-header h2 {
+            font-size: 1.1rem;
+            font-weight: 700;
+            color: var(--vc-primary);
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .card-body { padding: 1.5rem; }
+
+        /* Form Styles */
+        .form-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 1.25rem;
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+
+        .form-group.full-width { grid-column: 1 / -1; }
+
+        .form-label {
+            font-weight: 600;
+            font-size: 0.875rem;
+            color: var(--vc-text);
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .form-label .required { color: var(--vc-danger); }
+
+        .form-control {
+            padding: 0.75rem 1rem;
+            border: 2px solid var(--vc-border);
+            border-radius: var(--radius-md);
+            font-size: 0.95rem;
+            transition: all var(--transition-base);
+            background: var(--vc-bg-light);
+        }
+
+        .form-control:focus {
+            outline: none;
+            border-color: var(--vc-accent);
+            box-shadow: 0 0 0 3px rgba(0, 113, 194, 0.1);
+        }
+
+        textarea.form-control {
+            min-height: 100px;
+            resize: vertical;
+        }
+
+        /* Amenities Grid */
+        .amenities-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 0.75rem;
+        }
+
+        .amenity-checkbox {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            padding: 0.75rem;
+            background: var(--vc-border-light);
+            border-radius: var(--radius-md);
+            cursor: pointer;
+            transition: all var(--transition-base);
+            border: 2px solid transparent;
+        }
+
+        .amenity-checkbox:hover {
+            background: #e5e7eb;
+        }
+
+        .amenity-checkbox input {
+            width: 18px;
+            height: 18px;
+            accent-color: var(--vc-accent);
+        }
+
+        .amenity-checkbox input:checked + .amenity-label {
+            color: var(--vc-accent);
+            font-weight: 600;
+        }
+
+        .amenity-label {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 0.875rem;
+        }
+
+        /* Buttons */
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+            padding: 0.75rem 1.5rem;
+            font-size: 0.95rem;
+            font-weight: 600;
+            border: none;
+            border-radius: var(--radius-md);
+            cursor: pointer;
+            transition: all var(--transition-base);
+            text-decoration: none;
+        }
+
+        .btn-primary { background: var(--gradient-primary); color: #ffffff; }
+        .btn-primary:hover { transform: translateY(-2px); box-shadow: var(--shadow-lg); }
+
+        .btn-success { background: linear-gradient(135deg, #00aa6c 0%, #00c97b 100%); color: #ffffff; }
+        .btn-warning { background: linear-gradient(135deg, #febb02 0%, #ffcc33 100%); color: #1a1a1a; }
+        .btn-danger { background: linear-gradient(135deg, #dc3545 0%, #e74c5e 100%); color: #ffffff; }
+        .btn-sm { padding: 0.5rem 0.875rem; font-size: 0.8rem; }
+
+        .form-actions {
+            margin-top: 1.5rem;
+            display: flex;
+            gap: 1rem;
+            flex-wrap: wrap;
+        }
+
+        /* Table */
+        .table-responsive { overflow-x: auto; }
+
+        .admin-table {
+            width: 100%;
+            border-collapse: separate;
+            border-spacing: 0;
+        }
+
+        .admin-table th {
+            background: var(--vc-border-light);
+            color: var(--vc-text-light);
+            font-weight: 600;
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            padding: 0.875rem;
+            text-align: left;
+            border-bottom: 2px solid var(--vc-border);
+        }
+
+        .admin-table td {
+            padding: 0.875rem;
+            border-bottom: 1px solid var(--vc-border-light);
+            vertical-align: middle;
+            font-size: 0.9rem;
+        }
+
+        .admin-table tbody tr:hover { background: var(--vc-border-light); }
+
+        .hotel-name {
+            font-weight: 700;
+            color: var(--vc-primary);
+        }
+
+        .stars {
+            color: #ffc107;
+            font-size: 0.9rem;
+        }
+
+        .location-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.375rem;
+            padding: 0.25rem 0.625rem;
+            background: linear-gradient(135deg, #e0e7ff 0%, #c7d2fe 100%);
+            color: #4338ca;
+            border-radius: var(--radius-md);
+            font-size: 0.8rem;
+            font-weight: 500;
+        }
+
+        .price-tag {
+            font-weight: 700;
+            color: var(--vc-success);
+        }
+
+        .rooms-badge {
+            padding: 0.25rem 0.5rem;
+            border-radius: var(--radius-md);
+            font-size: 0.8rem;
+            font-weight: 600;
+        }
+
+        .rooms-ok { background: #dcfce7; color: #15803d; }
+        .rooms-low { background: #fef3c7; color: #a16207; }
+        .rooms-full { background: #fee2e2; color: #dc2626; }
+
+        .amenity-icons {
+            display: flex;
+            gap: 0.5rem;
+        }
+
+        .amenity-icon {
+            width: 28px;
+            height: 28px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+            font-size: 0.75rem;
+        }
+
+        .amenity-icon.active {
+            background: #dcfce7;
+            color: #15803d;
+        }
+
+        .amenity-icon.inactive {
+            background: #f3f4f6;
+            color: #9ca3af;
+        }
+
+        .action-buttons { display: flex; gap: 0.5rem; }
+
+        .empty-state {
+            text-align: center;
+            padding: 3rem;
+            color: var(--vc-text-light);
+        }
+
+        .empty-state i {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+            color: var(--vc-border);
+        }
+
+        /* Stats */
+        .stats-row {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .stat-mini {
+            background: var(--vc-border-light);
+            padding: 1rem;
+            border-radius: var(--radius-md);
+            text-align: center;
+        }
+
+        .stat-mini-value {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--vc-primary);
+        }
+
+        .stat-mini-label { font-size: 0.8rem; color: var(--vc-text-light); }
 
         @media (max-width: 768px) {
-            .page-header h1 { font-size: 1.75rem; }
-            
+            .page-header-content { flex-direction: column; text-align: center; }
+            .form-grid { grid-template-columns: 1fr; }
+            .amenities-grid { grid-template-columns: 1fr 1fr; }
         }
+        
     </style>
 </head>
 <body>
-    <!-- navbar -->
-    <nav class="navbar-modern">
+       <!-- navbar -->
+     <nav class="navbar-modern">
     <div class="container">
         <div class="navbar-wrapper">
             <!-- Logo / Brand -->
@@ -935,122 +1112,242 @@ nav {
     <!-- Page Header -->
     <div class="page-header">
         <div class="container">
-            <h1><i class="fas fa-map-marked-alt"></i> Gestion des Destinations</h1>
-            <p>Ajoutez, modifiez et gérez les destinations de voyage</p>
-            <div class="breadcrumb-admin">
-                <a href="${pageContext.request.contextPath}/admin/dashboard"><i class="fas fa-home"></i> Dashboard</a>
-                <span>/</span>
-                <span>Destinations</span>
+            <div class="page-header-content">
+                <div>
+                    <h1><i class="fas fa-hotel"></i> Gestion des Hôtels</h1>
+                    <p class="subtitle">Ajoutez et gérez les hôtels partenaires de la plateforme</p>
+                </div>
+                <a href="${pageContext.request.contextPath}/admin/dashboard" class="btn-back">
+                    <i class="fas fa-arrow-left"></i> Retour au Dashboard
+                </a>
             </div>
         </div>
     </div>
 
     <div class="container">
-        <!-- Alerts -->
+        <!-- Messages -->
         <c:if test="${not empty success}">
-            <div class="alert-custom alert-success-custom">
+            <div class="alert alert-success">
                 <i class="fas fa-check-circle"></i>
                 <span>${success}</span>
+                <button onclick="this.parentElement.remove()">&times;</button>
             </div>
         </c:if>
         <c:if test="${not empty error}">
-            <div class="alert-custom alert-danger-custom">
+            <div class="alert alert-danger">
                 <i class="fas fa-exclamation-circle"></i>
                 <span>${error}</span>
+                <button onclick="this.parentElement.remove()">&times;</button>
             </div>
         </c:if>
 
-        <!-- Add Form -->
-        <div class="admin-card">
-            <div class="card-header-custom">
-                <h2 class="card-title"><i class="fas fa-plus-circle"></i> Ajouter une nouvelle destination</h2>
+        <!-- Stats -->
+        <div class="stats-row">
+            <div class="stat-mini">
+                <div class="stat-mini-value">${hotels != null ? hotels.size() : 0}</div>
+                <div class="stat-mini-label">Total Hôtels</div>
             </div>
-            <div class="card-body-custom">
-                <form action="${pageContext.request.contextPath}/admin/create-destination" method="post">
-                    <div class="row g-3">
-                        <div class="col-md-6">
-                            <label for="name" class="form-label">Nom de la destination *</label>
-                            <input type="text" class="form-control" id="name" name="name" placeholder="Ex: Paris, Marrakech..." required>
+            <div class="stat-mini">
+                <div class="stat-mini-value">${destinations != null ? destinations.size() : 0}</div>
+                <div class="stat-mini-label">Destinations</div>
+            </div>
+        </div>
+
+        <!-- Add New Hotel -->
+        <div class="admin-card">
+            <div class="card-header">
+                <h2><i class="fas fa-plus-circle"></i> Ajouter un nouvel hôtel</h2>
+            </div>
+            <div class="card-body">
+                <form action="${pageContext.request.contextPath}/admin/hotels" method="post">
+                    <input type="hidden" name="action" value="create">
+                    
+                    <div class="form-grid">
+                        <div class="form-group">
+                            <label class="form-label">
+                                <i class="fas fa-hotel"></i> Nom de l'hôtel <span class="required">*</span>
+                            </label>
+                            <input type="text" name="name" class="form-control" placeholder="Ex: Hôtel Royal Palace" required>
                         </div>
-                        <div class="col-md-6">
-                            <label for="country" class="form-label">Pays *</label>
-                            <input type="text" class="form-control" id="country" name="country" placeholder="Ex: France, Maroc..." required>
+
+                        <div class="form-group">
+                            <label class="form-label">
+                                <i class="fas fa-map-marker-alt"></i> Destination <span class="required">*</span>
+                            </label>
+                            <select name="destinationId" class="form-control" required>
+                                <option value="">-- Sélectionner une destination --</option>
+                                <c:forEach items="${destinations}" var="dest">
+                                    <option value="${dest.id}">${dest.name} (${dest.country})</option>
+                                </c:forEach>
+                            </select>
                         </div>
-                        <div class="col-12">
-                            <label for="description" class="form-label">Description *</label>
-                            <textarea class="form-control" id="description" name="description" rows="3" placeholder="Décrivez cette destination..." required></textarea>
+
+                        <div class="form-group">
+                            <label class="form-label">
+                                <i class="fas fa-star"></i> Étoiles <span class="required">*</span>
+                            </label>
+                            <select name="stars" class="form-control" required>
+                                <option value="1">⭐ 1 étoile</option>
+                                <option value="2">⭐⭐ 2 étoiles</option>
+                                <option value="3">⭐⭐⭐ 3 étoiles</option>
+                                <option value="4" selected>⭐⭐⭐⭐ 4 étoiles</option>
+                                <option value="5">⭐⭐⭐⭐⭐ 5 étoiles</option>
+                            </select>
                         </div>
-                        <div class="col-12">
-                            <label for="imageUrl" class="form-label">URL de l'image</label>
-                            <input type="url" class="form-control" id="imageUrl" name="imageUrl" placeholder="https://exemple.com/image.jpg">
+
+                        <div class="form-group">
+                            <label class="form-label">
+                                <i class="fas fa-money-bill"></i> Prix par nuit (MAD) <span class="required">*</span>
+                            </label>
+                            <input type="number" name="pricePerNight" class="form-control" placeholder="500" min="0" step="0.01" required>
                         </div>
-                        <div class="col-12">
-                            <button type="submit" class="btn-primary-custom">
-                                <i class="fas fa-plus"></i> Ajouter la destination
-                            </button>
+
+                        <div class="form-group">
+                            <label class="form-label">
+                                <i class="fas fa-bed"></i> Chambres totales <span class="required">*</span>
+                            </label>
+                            <input type="number" name="totalRooms" class="form-control" placeholder="50" min="1" required>
                         </div>
+
+                        <div class="form-group">
+                            <label class="form-label">
+                                <i class="fas fa-map"></i> Adresse
+                            </label>
+                            <input type="text" name="address" class="form-control" placeholder="Ex: 123 Boulevard Mohammed V">
+                        </div>
+
+                        <div class="form-group full-width">
+                            <label class="form-label">
+                                <i class="fas fa-align-left"></i> Description
+                            </label>
+                            <textarea name="description" class="form-control" placeholder="Description de l'hôtel..."></textarea>
+                        </div>
+
+                        <div class="form-group full-width">
+                            <label class="form-label">
+                                <i class="fas fa-image"></i> URL de l'image
+                            </label>
+                            <input type="url" name="imageUrl" class="form-control" placeholder="https://example.com/image.jpg">
+                        </div>
+
+                        <div class="form-group full-width">
+                            <label class="form-label">
+                                <i class="fas fa-concierge-bell"></i> Services inclus
+                            </label>
+                            <div class="amenities-grid">
+                                <label class="amenity-checkbox">
+                                    <input type="checkbox" name="wifi" value="true" checked>
+                                    <span class="amenity-label"><i class="fas fa-wifi"></i> WiFi gratuit</span>
+                                </label>
+                                <label class="amenity-checkbox">
+                                    <input type="checkbox" name="pool" value="true">
+                                    <span class="amenity-label"><i class="fas fa-swimming-pool"></i> Piscine</span>
+                                </label>
+                                <label class="amenity-checkbox">
+                                    <input type="checkbox" name="restaurant" value="true">
+                                    <span class="amenity-label"><i class="fas fa-utensils"></i> Restaurant</span>
+                                </label>
+                                <label class="amenity-checkbox">
+                                    <input type="checkbox" name="parking" value="true">
+                                    <span class="amenity-label"><i class="fas fa-parking"></i> Parking</span>
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-actions">
+                        <button type="submit" class="btn btn-success">
+                            <i class="fas fa-plus"></i> Ajouter l'hôtel
+                        </button>
+                        <button type="reset" class="btn btn-warning">
+                            <i class="fas fa-undo"></i> Réinitialiser
+                        </button>
                     </div>
                 </form>
             </div>
         </div>
 
-        <!-- List -->
+        <!-- Hotels List -->
         <div class="admin-card">
-            <div class="card-header-custom">
-                <h2 class="card-title"><i class="fas fa-list"></i> Liste des destinations</h2>
-                <span class="badge bg-primary">${destinations.size()} destination(s)</span>
+            <div class="card-header">
+                <h2><i class="fas fa-list"></i> Liste des hôtels</h2>
             </div>
-            <div class="card-body-custom" style="padding: 0;">
+            <div class="card-body">
                 <c:choose>
-                    <c:when test="${not empty destinations}">
+                    <c:when test="${not empty hotels}">
                         <div class="table-responsive">
-                            <table class="table-custom">
+                            <table class="admin-table">
                                 <thead>
                                     <tr>
-                                        <th>ID</th>
-                                        <th>Image</th>
-                                        <th>Nom</th>
-                                        <th>Pays</th>
-                                        <th>Description</th>
-                                        <th>Statut</th>
+                                        <th>Hôtel</th>
+                                        <th>Destination</th>
+                                        <th>Étoiles</th>
+                                        <th>Prix/Nuit</th>
+                                        <th>Chambres</th>
+                                        <th>Services</th>
                                         <th>Actions</th>
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    <c:forEach items="${destinations}" var="dest">
+                                    <c:forEach items="${hotels}" var="hotel">
                                         <tr>
-                                            <td><strong>#${dest.id}</strong></td>
+                                            <td><span class="hotel-name">${hotel.name}</span></td>
                                             <td>
-                                                <c:choose>
-                                                    <c:when test="${not empty dest.imageUrl}">
-                                                        <img src="${dest.imageUrl}" alt="${dest.name}" class="item-image">
-                                                    </c:when>
-                                                    <c:otherwise>
-                                                        <div class="item-image" style="background: var(--vc-border); display: flex; align-items: center; justify-content: center;">
-                                                            <i class="fas fa-image" style="color: var(--vc-text-light);"></i>
-                                                        </div>
-                                                    </c:otherwise>
-                                                </c:choose>
+                                                <span class="location-badge">
+                                                    <i class="fas fa-map-marker-alt"></i> ${hotel.destination.name}
+                                                </span>
                                             </td>
-                                            <td><span class="item-name">${dest.name}</span></td>
-                                            <td><span class="item-badge"><i class="fas fa-globe"></i> ${dest.country}</span></td>
-                                            <td style="max-width: 250px;">
-                                                <span style="display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden;">${dest.description}</span>
+                                            <td>
+                                                <span class="stars">
+                                                    <c:forEach begin="1" end="${hotel.stars}">⭐</c:forEach>
+                                                </span>
+                                            </td>
+                                            <td>
+                                                <span class="price-tag">
+                                                    <fmt:formatNumber value="${hotel.pricePerNight}" type="number" maxFractionDigits="0"/> MAD
+                                                </span>
                                             </td>
                                             <td>
                                                 <c:choose>
-                                                    <c:when test="${dest.active}">
-                                                        <span class="item-status status-active"><i class="fas fa-check-circle"></i> Actif</span>
+                                                    <c:when test="${hotel.availableRooms > 10}">
+                                                        <span class="rooms-badge rooms-ok">${hotel.availableRooms}/${hotel.totalRooms}</span>
+                                                    </c:when>
+                                                    <c:when test="${hotel.availableRooms > 0}">
+                                                        <span class="rooms-badge rooms-low">${hotel.availableRooms}/${hotel.totalRooms}</span>
                                                     </c:when>
                                                     <c:otherwise>
-                                                        <span class="item-status status-inactive"><i class="fas fa-times-circle"></i> Inactif</span>
+                                                        <span class="rooms-badge rooms-full">Complet</span>
                                                     </c:otherwise>
                                                 </c:choose>
+                                            </td>
+                                            <td>
+                                                <div class="amenity-icons">
+                                                    <span class="amenity-icon ${hotel.wifi ? 'active' : 'inactive'}" title="WiFi">
+                                                        <i class="fas fa-wifi"></i>
+                                                    </span>
+                                                    <span class="amenity-icon ${hotel.pool ? 'active' : 'inactive'}" title="Piscine">
+                                                        <i class="fas fa-swimming-pool"></i>
+                                                    </span>
+                                                    <span class="amenity-icon ${hotel.restaurant ? 'active' : 'inactive'}" title="Restaurant">
+                                                        <i class="fas fa-utensils"></i>
+                                                    </span>
+                                                    <span class="amenity-icon ${hotel.parking ? 'active' : 'inactive'}" title="Parking">
+                                                        <i class="fas fa-parking"></i>
+                                                    </span>
+                                                </div>
                                             </td>
                                             <td>
                                                 <div class="action-buttons">
-                                                    <button class="btn-action btn-edit" title="Modifier"><i class="fas fa-edit"></i></button>
-                                                    <button class="btn-action btn-delete" title="Supprimer"><i class="fas fa-trash"></i></button>
+                                                    <button class="btn btn-warning btn-sm" onclick="editHotel(${hotel.id})">
+                                                        <i class="fas fa-edit"></i>
+                                                    </button>
+                                                    <form action="${pageContext.request.contextPath}/admin/hotels" method="post" style="display: inline;" onsubmit="return confirm('Supprimer cet hotel ?');">
+                                                        <input type="hidden" name="action" value="delete">
+                                                        <input type="hidden" name="id" value="${hotel.id}">
+                                                        <button type="submit" class="btn btn-danger btn-sm">
+                                                            <i class="fas fa-trash"></i>
+                                                        </button>
+                                                    </form>
                                                 </div>
                                             </td>
                                         </tr>
@@ -1061,9 +1358,8 @@ nav {
                     </c:when>
                     <c:otherwise>
                         <div class="empty-state">
-                            <i class="fas fa-map-marked-alt"></i>
-                            <h4>Aucune destination</h4>
-                            <p>Commencez par ajouter votre première destination.</p>
+                            <i class="fas fa-hotel"></i>
+                            <p>Aucun hôtel enregistré</p>
                         </div>
                     </c:otherwise>
                 </c:choose>
@@ -1071,7 +1367,12 @@ nav {
         </div>
     </div>
 
-   <script>
+    <script>
+        function editHotel(id) {
+            alert('Fonctionnalité de modification en cours de développement. ID: ' + id);
+        }
+    </script>
+    <script>
         //nav bar toggle
         // User Dropdown Toggle
 document.addEventListener('DOMContentLoaded', function() {

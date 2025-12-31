@@ -86,6 +86,15 @@ public class AdminService {
             JPAUtil.closeEntityManager(em);
         }
     }
+    
+    public Destination getDestinationById(Long id) {
+        EntityManager em = JPAUtil.getEntityManager();
+        try {
+            return destinationDAO.findById(em, id).orElse(null);
+        } finally {
+            JPAUtil.closeEntityManager(em);
+        }
+    }
 
     // ========== VOLS ==========
 
