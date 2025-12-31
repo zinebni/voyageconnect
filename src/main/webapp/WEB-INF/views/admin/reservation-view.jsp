@@ -60,7 +60,73 @@
             margin: 0 auto;
             padding: 0 1.5rem;
         }
-
+                /*actions rapides*/
+         /* Section Cards */
+        .section-card {
+            background: white;
+            border-radius: 16px;
+            padding: 2rem;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+            margin-bottom: 2rem;
+            border: 1px solid #e5e7eb;
+        }
+        
+        .section-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+            padding-bottom: 1rem;
+            border-bottom: 2px solid #f3f4f6;
+        }
+        
+        .section-title {
+            color: #003580;
+            font-weight: 700;
+            font-size: 1.5rem;
+            margin: 0;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+        
+        .section-title i {
+            color: #0071c2;
+            font-size: 1.75rem;
+        }
+                
+        /* Quick Actions */
+        .quick-actions-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+        }
+        
+        .action-btn {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+            padding: 1rem 1.5rem;
+            background: linear-gradient(135deg, #003580 0%, #0057b8 100%);
+            color: white;
+            text-decoration: none;
+            border-radius: 8px;
+            font-weight: 600;
+            transition: all 0.25s ease;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+        
+        .action-btn:hover {
+            background: linear-gradient(135deg, #0071c2 0%, #003580 100%);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+            color: white;
+        }
+        
+        .action-btn i {
+            font-size: 1.25rem;
+        }
         /* Navbar */
         .navbar-modern {
             background: var(--vc-bg-light);
@@ -527,7 +593,7 @@
         .action-buttons {
             display: flex;
             flex-wrap: wrap;
-            gap: 1rem;
+            gap: 40rem;
             align-items: center;
         }
 
@@ -637,6 +703,7 @@
 
             .action-buttons {
                 flex-direction: column;
+                gap: 1rem;
             }
 
             .btn {
@@ -1149,9 +1216,6 @@
                             </c:choose>
                             
                             <!-- Common Buttons -->
-                            <a href="${pageContext.request.contextPath}/admin/dashboard" class="btn btn-outline">
-                                <i class="fas fa-arrow-left"></i> Retour au Dashboard
-                            </a>
                             
                             <button onclick="window.print();" class="btn btn-print">
                                 <i class="fas fa-print"></i> Imprimer
@@ -1168,6 +1232,34 @@
                 <span>Aucune réservation trouvée.</span>
             </div>
         </c:if>
+
+        <!-- Quick Actions -->
+        <div class="section-card">
+            <div class="section-header">
+                <h2 class="section-title">
+                    <i class="fas fa-bolt"></i> Actions Rapides
+                </h2>
+            </div>
+            
+            <div class="quick-actions-grid">
+                <a href="${pageContext.request.contextPath}/admin/destinations" class="action-btn">
+                    <i class="fas fa-map-marked-alt"></i>
+                    <span>Gérer Destinations</span>
+                </a>
+                <a href="${pageContext.request.contextPath}/admin/flights" class="action-btn">
+                    <i class="fas fa-plane"></i>
+                    <span>Gérer Vols</span>
+                </a>
+                <a href="${pageContext.request.contextPath}/admin/hotels" class="action-btn">
+                    <i class="fas fa-hotel"></i>
+                    <span>Gérer Hôtels</span>
+                </a>
+                <a href="${pageContext.request.contextPath}/admin/circuits" class="action-btn">
+                    <i class="fas fa-route"></i>
+                    <span>Gérer Circuits</span>
+                </a>
+            </div>
+        </div>
     </div>
 
     <script>

@@ -26,6 +26,7 @@
             --radius-md: 8px;
             --radius-lg: 12px;
             --radius-xl: 16px;
+            --radius-full: 9999px;
             --transition-base: 250ms cubic-bezier(0.4, 0, 0.2, 1);
             --gradient-primary: linear-gradient(135deg, #003580 0%, #0057b8 100%);
             --gradient-admin: linear-gradient(135deg, #003580 0%, #003580 100%);
@@ -38,6 +39,101 @@
             line-height: 1.6;
         }
         .container { max-width: 1200px; margin: 0 auto; padding: 0 1.5rem; }
+
+                /*actions rapides*/
+         /* Section Cards */
+        .section-card {
+            background: white;
+            border-radius: 16px;
+            padding: 2rem;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+            margin-bottom: 2rem;
+            border: 1px solid #e5e7eb;
+        }
+        
+        .section-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+            padding-bottom: 1rem;
+            border-bottom: 2px solid #f3f4f6;
+        }
+        
+        .section-title {
+            color: #003580;
+            font-weight: 700;
+            font-size: 1.5rem;
+            margin: 0;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+        
+        .section-title i {
+            color: #0071c2;
+            font-size: 1.75rem;
+        }
+                
+        /* Quick Actions */
+        .quick-actions-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+        }
+        
+        .action-btn {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+            padding: 1rem 1.5rem;
+            background: linear-gradient(135deg, #003580 0%, #0057b8 100%);
+            color: white;
+            text-decoration: none;
+            border-radius: 8px;
+            font-weight: 600;
+            transition: all 0.25s ease;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+        
+        .action-btn:hover {
+            background: linear-gradient(135deg, #0071c2 0%, #003580 100%);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+            color: white;
+        }
+        
+        .action-btn i {
+            font-size: 1.25rem;
+        }
+
+        /* ========= Button Back to Dashboard ========== */
+         .page-header-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+                .btn-back {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.625rem 1.25rem;
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            color: #ffffff;
+            text-decoration: none;
+            border-radius: var(--radius-md);
+            font-weight: 500;
+            transition: all var(--transition-base);
+        }
+
+        .btn-back:hover {
+            background: rgba(255, 255, 255, 0.2);
+            color: #ffffff;
+        }
 
        /* ========== Navigation Bar ========== */
 nav {
@@ -935,12 +1031,14 @@ nav {
     <!-- Page Header -->
     <div class="page-header">
         <div class="container">
-            <h1><i class="fas fa-map-marked-alt"></i> Gestion des Destinations</h1>
-            <p>Ajoutez, modifiez et gérez les destinations de voyage</p>
-            <div class="breadcrumb-admin">
-                <a href="${pageContext.request.contextPath}/admin/dashboard"><i class="fas fa-home"></i> Dashboard</a>
-                <span>/</span>
-                <span>Destinations</span>
+            <div class="page-header-content">
+                <div>
+                    <h1><i class="fas fa-map-marked-alt"></i> Gestion des Destinations</h1>
+                    <p>Ajoutez, modifiez et gérez les destinations de voyage</p>
+                </div>
+                <a href="${pageContext.request.contextPath}/admin/dashboard" class="btn-back">
+                        <i class="fas fa-arrow-left"></i> Retour au Dashboard
+                </a>
             </div>
         </div>
     </div>
@@ -1067,6 +1165,33 @@ nav {
                         </div>
                     </c:otherwise>
                 </c:choose>
+            </div>
+        </div>
+        <!-- Quick Actions -->
+        <div class="section-card">
+            <div class="section-header">
+                <h2 class="section-title">
+                    <i class="fas fa-bolt"></i> Actions Rapides
+                </h2>
+            </div>
+            
+            <div class="quick-actions-grid">
+                <a href="${pageContext.request.contextPath}/admin/destinations" class="action-btn">
+                    <i class="fas fa-map-marked-alt"></i>
+                    <span>Gérer Destinations</span>
+                </a>
+                <a href="${pageContext.request.contextPath}/admin/flights" class="action-btn">
+                    <i class="fas fa-plane"></i>
+                    <span>Gérer Vols</span>
+                </a>
+                <a href="${pageContext.request.contextPath}/admin/hotels" class="action-btn">
+                    <i class="fas fa-hotel"></i>
+                    <span>Gérer Hôtels</span>
+                </a>
+                <a href="${pageContext.request.contextPath}/admin/circuits" class="action-btn">
+                    <i class="fas fa-route"></i>
+                    <span>Gérer Circuits</span>
+                </a>
             </div>
         </div>
     </div>
