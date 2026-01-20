@@ -80,7 +80,7 @@ Ouvrir : `http://localhost:8080/VoyageConnect/`
 ## 📦 Structure du projet
 
 ```
-projetJEEAyaZineb/
+voyageconnect/
 ├── src/main/java/com/voyageconnect/
 │   ├── controller/       # 7 Servlets (Auth, Search, Reservation, User, Admin, Payment, Review)
 │   ├── filter/          # 3 Filtres (Encoding, Authentication, Authorization)
